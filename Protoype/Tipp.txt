@@ -1,0 +1,6 @@
+Zappeln verhindern durch zeitliche Verzögerung
+evtl. über Medianwert oder gleitendes Mittel
+    xNeu = (xAlt*7 + xNeuDetect) //8
+
+Zeitmessung nicht über Anzahl der Schleifendurchläufe, wegen evtl. variabler FPS
+    vielleicht eher über CPU-Zeit

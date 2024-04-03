@@ -26,16 +26,27 @@ script_dir = os.path.dirname(__file__)
 background_path = os.path.join(script_dir, "Background.png")
 forground_path = os.path.join(script_dir, "Foreground.png")
 middle_path = os.path.join(script_dir, "MiddleLayer.png")
+ballon_path = os.path.join(script_dir, "hot-air-balloon.png")
 
-# Bilder laden
-hintergrund = pygame.image.load(background_path).convert()
-vordergrund = pygame.image.load(forground_path).convert_alpha()
-zwischenebene = pygame.image.load(middle_path).convert_alpha()  # Die dritte Ebene
+#Funktion um Bilder zu laden und skalieren
+def load_and_scale_image(image_path, scale_factor):
+    image = pygame.image.load(image_path).convert_alpha()
+    scaled_image = pygame.transform.scale(image, (int(image.get_width() * scale_factor), int(image.get_height() * scale_factor)))
+    return scaled_image
+
+
+# Bilder laden und skalieren
+hintergrund = load_and_scale_image(background_path, 1.0)
+vordergrund = load_and_scale_image(forground_path, 0.5)
+zwischenebene = load_and_scale_image(middle_path, 0.75)
+ballon = load_and_scale_image(ballon_path, 0.3)
+
 
 
 # Anfangsposition der Bilder
 x_vordergrund, y_vordergrund = half_x, half_y
 x_zwischenebene, y_zwischenebene = half_x, half_y
+x_ballon, y_ballon = 2*half_x, 2*half_y
 
 #letze Erkannte Position
 lastknown_x, lastknown_y = 0, 0
@@ -58,6 +69,9 @@ while running:
         if lastknown_x !=0 and lastknown_y !=0:
             x_diff = x - lastknown_x
             y_diff = y - lastknown_y
+
+            print("x: ", lastknown_x, "x: ", lastknown_y)
+            
             
             x_vordergrund += x_diff
             y_vordergrund -= y_diff #diese Zeile auskommentieren, wenn kein vertikales Tracking / Bewegung gewünscht
@@ -65,6 +79,10 @@ while running:
             # Bewege Middle Layer mit halber Geschwindigkeit
             x_zwischenebene += x_diff // 3
             y_zwischenebene -= y_diff // 3 #diese Zeile auskommentieren, wenn kein vertikales Tracking / Bewegung gewünscht
+
+            #Bewege Ballon
+            #x_ballon += x_diff //2 #auskommentiert weil nur vertikal gewünscht
+            y_ballon += y_diff // 2
 
         lastknown_x, lastknown_y = x, y
         break  # Nur das erste Gesicht verwenden
@@ -74,6 +92,7 @@ while running:
     fenster.blit(hintergrund, (0, 0))
     fenster.blit(zwischenebene, (x_zwischenebene, y_zwischenebene))
     fenster.blit(vordergrund, (x_vordergrund, y_vordergrund))
+    fenster.blit(ballon, (x_ballon, y_ballon))
     
     # Fenster aktualisieren
     pygame.display.flip()

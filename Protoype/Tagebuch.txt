@@ -1,0 +1,10 @@
+27.03.2024
+    Dominik, Jonas, Moritz: Erstellung funktionaler Prototyp
+27.03.2024
+    Jonas: Anlegen GitHub Repo, Erstellung Readme, Implementierung relativer Pfade
+28.03.2024
+    Dominik: Funktion für Skalierung der Bilder
+03.04.2024
+    Alle: Ideendiskussion, Planung für Umsetzung
+    Dominik, Jonas, Sascha: Beginn von allgemeiner Logik 
+    Moritz: Evaluierung dlib für stabileres Tracking
