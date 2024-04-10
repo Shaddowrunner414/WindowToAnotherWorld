@@ -50,8 +50,14 @@ x_ballon, y_ballon = 2*half_x, 2*half_y
 
 #letze Erkannte Position
 lastknown_x, lastknown_y = 0, 0
-w, h = 170, 170
+#lastknown_x2, lastknown_y2 = 0, 0
+#lastknown_x3, lastknown_y3 = 0, 0
+#lastknown_x4, lastknown_y4 = 0, 0
+#lastknown_x5, lastknown_y5 = 0, 0
+#w, h = 170, 170
 initialized = False
+
+
 # Spiel-Schleife
 running = True
 while running:
@@ -64,7 +70,7 @@ while running:
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-    faces
+
     # Erstes erkanntes Gesicht verwenden, um die Position zu aktualisieren
     if len(faces) > 0:  # Ensure faces is not empty
         (x, y, w_face, h_face) = faces[0]  # Only the first detected face
@@ -73,23 +79,27 @@ while running:
             initialized = True
 
         if lastknown_x != 0 and lastknown_y != 0:
-            x_diff = x - lastknown_x
-            y_diff = y - lastknown_y
+            x_diff = x - ((x*8 + lastknown_x*2)/10)
+            y_diff = y - ((y*8 + lastknown_y*2)/10)
 
-            print("x: ", lastknown_x, "x: ", lastknown_y, "w: ", w_face, "h: ", h_face)
+            print("lastknown_x: ", lastknown_x, "lastknown_y: ", lastknown_y, "w_face: ", w_face, "w: ", w,  "h_face: ", h_face, "h: ", h)
 
             x_vordergrund += x_diff
-            y_vordergrund -= y_diff  # diese Zeile auskommentieren, wenn kein vertikales Tracking / Bewegung gewünscht
+            y_vordergrund += y_diff  # diese Zeile auskommentieren, wenn kein vertikales Tracking / Bewegung gewünscht
 
             # Bewege Middle Layer mit halber Geschwindigkeit
-            x_zwischenebene += x_diff // 3
-            y_zwischenebene -= y_diff // 3  # diese Zeile auskommentieren, wenn kein vertikales Tracking / Bewegung gewünscht
+            x_zwischenebene += x_diff / 3
+            y_zwischenebene += y_diff / 3  # diese Zeile auskommentieren, wenn kein vertikales Tracking / Bewegung gewünscht
 
             # Bewege Ballon
             # x_ballon += x_diff // 2  # auskommentiert weil nur vertikal gewünscht
-            y_ballon += y_diff // 2
+            y_ballon -= y_diff / 2
 
         lastknown_x, lastknown_y = x, y
+        #lastknown_x2, lastknown_y2 = lastknown_x, lastknown_y
+        #lastknown_x3, lastknown_y3 = lastknown_x2, lastknown_y2
+        #lastknown_x4, lastknown_y4 = lastknown_x3, lastknown_y3
+        #lastknown_x5, lastknown_y5 = lastknown_x4, lastknown_y4
 
     # Hintergrund und Vordergrund zeichnen
     fenster.fill(schwarz)
