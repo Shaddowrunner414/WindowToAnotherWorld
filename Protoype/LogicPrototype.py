@@ -38,11 +38,15 @@ def load_and_scale(image_name):
     scale_factor = image_width / width 
     scale_factor2 = width / image_width
     print(scale_factor, scale_factor2, image_width, width)
-    scaled_image = pygame.transform.scale(image, (image.get_width() * scale_factor, image.get_height() * scale_factor))
+    scaled_image = pygame.transform.scale(image, (image.get_width() * scale_factor2, image.get_height() * scale_factor2))
+    image_width2 = scaled_image.get_width()
+    image_height2 = scaled_image.get_height()
+    print(image_width2, image_height2)
     return scaled_image
 
 #Bilder laden
 layer1 = load_and_scale("Background.png")
+layer2 = load_and_scale("Foreground.png")
 
 #Anfangsposition der Bilder
 
@@ -57,6 +61,7 @@ while running:
     # Hintergrund und Vordergrund zeichnen
     window.fill(black)
     window.blit(layer1, (0, 0))
+    window.blit(layer2, (0, 0))
 
     pygame.display.flip()
 
