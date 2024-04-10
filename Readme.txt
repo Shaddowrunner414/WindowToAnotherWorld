@@ -9,6 +9,7 @@ Pip:
 
 Cmake:
 	https://cmake.org/download/
+	! add to path aktivieren !
 
 Pip packages:
 	OpenCV:
