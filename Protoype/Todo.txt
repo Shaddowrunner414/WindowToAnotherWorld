@@ -1,7 +1,16 @@
 Position des Gesichts mit gleitendem Mittelwert stailisieren
 oder durch inkrementelle Bewegung
+oder durch Kalman Filter (z.B. in opencv integriert)
 
-dlib
+    dlib Evaluierung ->  nicht gut genug -> Moritz & Jonas
 
-for Schleife hinterfragen bzw. entfernen
+Mediapipe Evaluierung
 
+Neuralnet Evaluierung
+
+
+    for Schleife hinterfragen bzw. entfernen -> done by Sascha
+
+Storyboard bzw. Flowdiagramm erstellen, d.h. einmal den komplette Ablauf durchgehen
+    (was soll passieren in den Verschiedenen Zuständen)
+    als Flowchart

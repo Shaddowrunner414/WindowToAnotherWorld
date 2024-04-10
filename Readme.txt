@@ -16,4 +16,9 @@ Pip packages:
 		pip install opencv-python (alternativ: pip3 install opencv-python)
 	Pygame:
 		pip install pygame
-	dlib
+	dlib:
+		pip install dlib
+		evtl. muss dafür dafür Visual Studio für C++ installiert
+	mediapipe:
+		pip install mediapipe
+		(wenn andere Python Versionen installiert: Versuche: C:\Users\DEINEN_NAME_HIER_EINFÜGEN\AppData\Local\Programs\Python\Python311/python -m pip install mediapipe)

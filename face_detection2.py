@@ -7,7 +7,7 @@ detector = dlib.get_frontal_face_detector()
 tracker = dlib.correlation_tracker()
 
 # Read the input video
-cap = cv2.VideoCapture('input_video.mp4')
+cap = cv2.VideoCapture(0)
 
 while True:
     ret, frame = cap.read()
@@ -27,6 +27,9 @@ while True:
         
         # Initialize the tracker with the current frame and face bounding box
         tracker.start_track(frame, dlib.rectangle(x, y, x+w, y+h))
+
+        # Draw rectangle without dlib
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
         
         # Update the tracker to track the face
         tracker.update(frame)
@@ -38,7 +41,10 @@ while True:
         
         # Draw rectangle around the tracked face
         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
+        
     
+
     # Display the output frame
     cv2.imshow('Face Tracking', frame)
     

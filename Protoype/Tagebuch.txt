@@ -8,3 +8,7 @@
     Alle: Ideendiskussion, Planung für Umsetzung
     Dominik, Jonas, Sascha: Beginn von allgemeiner Logik 
     Moritz: Evaluierung dlib für stabileres Tracking
+10.04.2024
+    Moritz & Jonas: Stabilitättest für OpenCV, Evaluierung Mediapipe
+    Dominik: fix drift und jittern
+    Shascha: fix jittern

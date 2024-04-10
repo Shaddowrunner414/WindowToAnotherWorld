@@ -4,3 +4,12 @@ evtl. über Medianwert oder gleitendes Mittel
 
 Zeitmessung nicht über Anzahl der Schleifendurchläufe, wegen evtl. variabler FPS
     vielleicht eher über CPU-Zeit
+
+
+für Mediapipe runter auf Python 3.11
+
+Wechsel zwischen Python Versionen:
+    Strg + Shift + P
+    Select Python Interpreter
+    3.11
+    
