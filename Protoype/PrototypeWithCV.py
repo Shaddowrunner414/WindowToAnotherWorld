@@ -49,13 +49,14 @@ x_zwischenebene, y_zwischenebene = half_x, half_y
 x_ballon, y_ballon = 2*half_x, 2*half_y
 
 #letze Erkannte Position
-lastknown_x, lastknown_y = 0, 0
-#lastknown_x2, lastknown_y2 = 0, 0
-#lastknown_x3, lastknown_y3 = 0, 0
+lastknown_x, lastknown_y = half_x, half_y
+lastknown_x2, lastknown_y2 = half_x, half_y
+lastknown_x3, lastknown_y3 = half_x, half_y
 #lastknown_x4, lastknown_y4 = 0, 0
 #lastknown_x5, lastknown_y5 = 0, 0
 #w, h = 170, 170
 initialized = False
+x_neu, y_neu = half_x, half_y
 
 
 # Spiel-Schleife
@@ -78,26 +79,32 @@ while running:
             w, h = w_face, h_face
             initialized = True
 
-        if lastknown_x != 0 and lastknown_y != 0:
-            x_diff = x - ((x*8 + lastknown_x*2)/10)
-            y_diff = y - ((y*8 + lastknown_y*2)/10)
+        #if(abs(x-lastknown_x > 50)):
+       #     x = lastknown_x3
+            
+        #if(abs(y-lastknown_y > 50)):
+       #     y = lastknown_y3
 
-            print("lastknown_x: ", lastknown_x, "lastknown_y: ", lastknown_y, "w_face: ", w_face, "w: ", w,  "h_face: ", h_face, "h: ", h)
+        #if lastknown_x != 0 and lastknown_y != 0: #??
+        x_neu = ((x + lastknown_x*9)/10)
+        y_neu = ((y + lastknown_y*9)/10)
 
-            x_vordergrund += x_diff
-            y_vordergrund += y_diff  # diese Zeile auskommentieren, wenn kein vertikales Tracking / Bewegung gewünscht
+        print("x: ", x,  "y: ", y)
 
-            # Bewege Middle Layer mit halber Geschwindigkeit
-            x_zwischenebene += x_diff / 3
-            y_zwischenebene += y_diff / 3  # diese Zeile auskommentieren, wenn kein vertikales Tracking / Bewegung gewünscht
+        x_vordergrund = x_neu
+        y_vordergrund = y_neu # diese Zeile auskommentieren, wenn kein vertikales Tracking / Bewegung gewünscht
 
-            # Bewege Ballon
-            # x_ballon += x_diff // 2  # auskommentiert weil nur vertikal gewünscht
-            y_ballon -= y_diff / 2
+        # Bewege Middle Layer mit halber Geschwindigkeit
+        # x_zwischenebene += x_diff / 3
+        # y_zwischenebene -= y_diff / 3  # diese Zeile auskommentieren, wenn kein vertikales Tracking / Bewegung gewünscht
 
-        lastknown_x, lastknown_y = x, y
-        #lastknown_x2, lastknown_y2 = lastknown_x, lastknown_y
-        #lastknown_x3, lastknown_y3 = lastknown_x2, lastknown_y2
+        # Bewege Ballon
+        # x_ballon += x_diff // 2  # auskommentiert weil nur vertikal gewünscht
+        # y_ballon += y_diff / 2
+
+        lastknown_x, lastknown_y = x_neu, y_neu
+        lastknown_x2, lastknown_y2 = lastknown_x, lastknown_y
+        lastknown_x3, lastknown_y3 = lastknown_x2, lastknown_y2
         #lastknown_x4, lastknown_y4 = lastknown_x3, lastknown_y3
         #lastknown_x5, lastknown_y5 = lastknown_x4, lastknown_y4
 
@@ -105,7 +112,7 @@ while running:
     fenster.fill(schwarz)
     fenster.blit(hintergrund, (0, 0))
     fenster.blit(zwischenebene, (x_zwischenebene, y_zwischenebene))
-    fenster.blit(vordergrund, (x_vordergrund, y_vordergrund))
+    fenster.blit(vordergrund, (x_vordergrund, y_vordergrund)) # koordinaten runden auf ganze Zahlen
     fenster.blit(ballon, (x_ballon, y_ballon))
     
     # Fenster aktualisieren
