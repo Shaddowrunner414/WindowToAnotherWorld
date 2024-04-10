@@ -1,0 +1,7 @@
+Position des Gesichts mit gleitendem Mittelwert stailisieren
+oder durch inkrementelle Bewegung
+
+dlib
+
+for Schleife hinterfragen bzw. entfernen
+
