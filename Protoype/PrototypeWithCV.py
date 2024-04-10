@@ -50,7 +50,8 @@ x_ballon, y_ballon = 2*half_x, 2*half_y
 
 #letze Erkannte Position
 lastknown_x, lastknown_y = 0, 0
-
+w, h = 170, 170
+initialized = False
 # Spiel-Schleife
 running = True
 while running:
@@ -63,29 +64,32 @@ while running:
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-
+    faces
     # Erstes erkanntes Gesicht verwenden, um die Position zu aktualisieren
-    for (x, y, w, h) in faces:
-        if lastknown_x !=0 and lastknown_y !=0:
+    if len(faces) > 0:  # Ensure faces is not empty
+        (x, y, w_face, h_face) = faces[0]  # Only the first detected face
+        if not initialized:
+            w, h = w_face, h_face
+            initialized = True
+
+        if lastknown_x != 0 and lastknown_y != 0:
             x_diff = x - lastknown_x
             y_diff = y - lastknown_y
 
-            print("x: ", lastknown_x, "x: ", lastknown_y)
-            
-            
+            print("x: ", lastknown_x, "x: ", lastknown_y, "w: ", w_face, "h: ", h_face)
+
             x_vordergrund += x_diff
-            y_vordergrund -= y_diff #diese Zeile auskommentieren, wenn kein vertikales Tracking / Bewegung gewünscht
+            y_vordergrund -= y_diff  # diese Zeile auskommentieren, wenn kein vertikales Tracking / Bewegung gewünscht
 
             # Bewege Middle Layer mit halber Geschwindigkeit
             x_zwischenebene += x_diff // 3
-            y_zwischenebene -= y_diff // 3 #diese Zeile auskommentieren, wenn kein vertikales Tracking / Bewegung gewünscht
+            y_zwischenebene -= y_diff // 3  # diese Zeile auskommentieren, wenn kein vertikales Tracking / Bewegung gewünscht
 
-            #Bewege Ballon
-            #x_ballon += x_diff //2 #auskommentiert weil nur vertikal gewünscht
+            # Bewege Ballon
+            # x_ballon += x_diff // 2  # auskommentiert weil nur vertikal gewünscht
             y_ballon += y_diff // 2
 
         lastknown_x, lastknown_y = x, y
-        break  # Nur das erste Gesicht verwenden
 
     # Hintergrund und Vordergrund zeichnen
     fenster.fill(schwarz)
