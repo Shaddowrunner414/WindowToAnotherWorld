@@ -14,3 +14,4 @@
     Shascha: fix jittern
 17.04.2024
     Jonas: Umtrukturierung Ordner-Struktur für bessere Sortierung & Erstellung FlowChart
+    Dominik: Implementierung Scale-Factor
