@@ -31,6 +31,14 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
             # Only draw the first detected face
             detection = results.detections[0]
             mp_drawing.draw_detection(image, detection)
+
+            # Get the tracked x and y coordinates
+            bbox = detection.location_data.relative_bounding_box
+            x_face_now = int(bbox.xmin * image.shape[1])
+            y_face_now = int(bbox.ymin * image.shape[0])
+
+              # Print the tracked x and y coordinates
+            print("X:", x_face_now, "Y:", y_face_now)
         
         # Zeige das Bild an
         cv2.imshow('Gesichtserkennung', image)
