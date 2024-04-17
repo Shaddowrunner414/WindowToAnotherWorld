@@ -12,3 +12,5 @@
     Moritz & Jonas: Stabilitättest für OpenCV, Evaluierung Mediapipe
     Dominik: fix drift und jittern
     Shascha: fix jittern
+17.04.2024
+    Jonas: Umtrukturierung Ordner-Struktur für bessere Sortierung & Erstellung FlowChart

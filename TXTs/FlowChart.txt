@@ -1,0 +1,25 @@
+1. Stand-By:
+        (no faces detected)
+        don't interrupt other events / movements
+        center all layers (looking straight out of the window)
+   if(face detected)
+        enter 2.
+
+2. Follow-Face:
+        move all layers according to face movements
+   if(no face detected anymore)
+        enter 1.
+   if(facePosition is in xy-coordinate-threshold for 5s)
+        enter 3.
+   if(facePosition is in x1y1-coordinate-threshold for 5s)
+        enter X. 
+
+3. Trigger train    
+        move all layers according to face movements
+        + start moving traing across the image (finish this movement no matter what)
+   if(no face detected anymore)
+        enter 1.
+   if(train movement is done)
+        enter 2. 
+   if(facePosition is in x1y1-coordinate-threshold for 5s)
+        enter X. 

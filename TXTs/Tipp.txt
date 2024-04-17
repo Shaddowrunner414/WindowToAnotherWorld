@@ -12,4 +12,4 @@ Wechsel zwischen Python Versionen:
     Strg + Shift + P
     Select Python Interpreter
     3.11
-    
+
