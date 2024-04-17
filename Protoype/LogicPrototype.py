@@ -32,13 +32,14 @@ def load(image_name):
     return image
 
 #Funktion um die Bilder zu skalieren und an die Bildschirmauflösung anzupassen
-def load_and_scale(image_name):
+def load_and_scale(image_name, scale_factor=1.0):
+    sf = scale_factor
     image = load(image_name)
     image_width = image.get_width()
     scale_factor = image_width / width 
     scale_factor2 = width / image_width
     print(scale_factor, scale_factor2, image_width, width)
-    scaled_image = pygame.transform.scale(image, (image.get_width() * scale_factor2, image.get_height() * scale_factor2))
+    scaled_image = pygame.transform.scale(image, (image.get_width() * scale_factor2 * sf, image.get_height() * scale_factor2 * sf))
     image_width2 = scaled_image.get_width()
     image_height2 = scaled_image.get_height()
     print(image_width2, image_height2)
@@ -46,7 +47,7 @@ def load_and_scale(image_name):
 
 #Bilder laden
 layer1 = load_and_scale("Background.png")
-layer2 = load_and_scale("Foreground.png")
+layer2 = load_and_scale("Foreground.png", scale_factor=0.2)
 
 #Anfangsposition der Bilder
 
