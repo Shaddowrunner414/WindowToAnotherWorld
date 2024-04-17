@@ -38,21 +38,35 @@ def load(image_name):
 
 #Funktion um die Bilder zu skalieren und an die Bildschirmauflösung anzupassen
 def load_and_scale(image_name, scale_factor=1.0):
+    print("__")
     sf = scale_factor
     image = load(image_name)
     image_width = image.get_width()
-    scale_factor = image_width / width 
+    image_height = image.get_height()
+    scale_factor = height / image_height 
     scale_factor2 = width / image_width
-    print(scale_factor, scale_factor2, image_width, width)
-    scaled_image = pygame.transform.scale(image, (image.get_width() * scale_factor2 * sf, image.get_height() * scale_factor2 * sf))
-    image_width2 = scaled_image.get_width()
-    image_height2 = scaled_image.get_height()
-    print(image_width2, image_height2)
+
+    #Automatisches Skalieren
+    if image_width > image_height:
+        scaled_image = pygame.transform.scale(image, (image.get_width() * scale_factor2 * sf, image.get_height() * scale_factor2 * sf))
+        image_width2 = scaled_image.get_width()
+        image_height2 = scaled_image.get_height()
+        print("W>H", scale_factor2, image_width, image_width2, width, image_height, image_height2, height, image_name)
+    elif image_width <= image_height:
+        scaled_image = pygame.transform.scale(image, (image.get_width() * scale_factor * sf, image.get_height() * scale_factor * sf))
+        image_width2 = scaled_image.get_width()
+        image_height2 = scaled_image.get_height()
+        print("H<W", scale_factor, image_width, image_width2, width, image_height, image_height2, height, image_name)
+
+    #image_width2 = scaled_image.get_width()
+    #image_height2 = scaled_image.get_height()
+    #print(scale_factor, scale_factor2, image_width, width, image_width2, image_height2, image_name)
+    print("__")
     return scaled_image
 
 #Bilder laden
 #Layer Index zählt vom Hintergrund beginnend aus hoch
-layer1 = load_and_scale("Background.png")
+layer1 = load_and_scale("canada.png")
 layer2 = load_and_scale("Foreground.png", scale_factor=0.2)
 
 #Anfangsposition der Bilder
