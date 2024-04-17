@@ -87,6 +87,9 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         # Erkenne Gesichter
         results = face_detection.process(image)
 
+        # Initialisiere diese Variablen
+        x_face_now, y_face_now = width * 0.2, height * 0.2  
+
 
         # Koordinaten des Gesichts auslesen und motion smoothing anwenden
         if results.detections:
@@ -118,7 +121,7 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         # Hintergrund und Vordergrund zeichnen
         window.fill(black)
         window.blit(layer1, (0, 0))
-        window.blit(layer2, (0, 0))
+        window.blit(layer2, (x_layer2, y_layer2))
 
         pygame.display.flip()
 
