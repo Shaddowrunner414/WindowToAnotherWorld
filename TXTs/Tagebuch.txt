@@ -15,3 +15,4 @@
 17.04.2024
     Jonas: Umtrukturierung Ordner-Struktur für bessere Sortierung & Erstellung FlowChart
     Dominik: Implementierung Scale-Factor
+    Moritz: nur ein Gesicht erkennen, versuchen nur das erste erkannte Gesicht zu tracken
