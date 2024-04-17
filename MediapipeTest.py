@@ -28,8 +28,8 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         image.flags.writeable = True
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         if results.detections:
-            for detection in results.detections:
-                mp_drawing.draw_detection(image, detection)
+            detection = results.detections[0]
+            mp_drawing.draw_detection(image, detection)
         
         # Zeige das Bild an
         cv2.imshow('Gesichtserkennung', image)
