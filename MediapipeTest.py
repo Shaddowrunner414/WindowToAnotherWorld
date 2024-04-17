@@ -38,4 +38,3 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
 
 cap.release()
 cv2.destroyAllWindows()
-q
