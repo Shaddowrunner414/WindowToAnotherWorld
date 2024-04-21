@@ -10,8 +10,8 @@ Zeitplan:
     -KW 18
         -ggf. weitere Bilder erstellen (Moritz)
     -KW 19
-        -Logik für Mediapipe überarbeiten und implementieren
-        -tracking flüssiger gestalten (Moritz)
+        -Logik für Mediapipe überarbeiten und implementieren (Jonas, Dominik)
+        -tracking flüssiger gestalten (Moritz, Sascha)
     -KW 20
     -KW 21
     -KW 22
