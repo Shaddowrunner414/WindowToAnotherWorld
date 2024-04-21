@@ -1,0 +1,17 @@
+Teilaufgaben:
+    -Tracking flüssiger gestalten
+    -Bilder für das virtuelle Fenster erstellen 
+    -Logik für Mediapipe überarbeiten und implementieren
+    -(Spezielles Gesicht tracken)
+
+Zeitplan:
+    -KW 17
+        -Bilder erstellen (Moritz)
+    -KW 18
+        -ggf. weitere Bilder erstellen (Moritz)
+    -KW 19
+        -Logik für Mediapipe überarbeiten und implementieren
+        -tracking flüssiger gestalten (Moritz)
+    -KW 20
+    -KW 21
+    -KW 22
