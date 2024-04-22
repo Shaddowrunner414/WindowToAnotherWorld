@@ -3,6 +3,7 @@ import pygame
 import sys
 import os
 import mediapipe as mp
+import ctypes
 
 # Initialisiere Mediapipe Face Detection
 mp_face_detection = mp.solutions.face_detection
@@ -15,9 +16,36 @@ cap = cv2.VideoCapture(0)  # 0 steht für die erste Kamera
 # Gesichtserkennungs-Classifier laden
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
+#Systemsskalierung auslesen
+scaleFactor = ctypes.windll.shcore.GetScaleFactorForDevice(0) / 100
+print("\nSkalierung: ", scaleFactor)
+sysSf = scaleFactor
+
+#Bildschirmskalierung von pygame ausgeben(Standartmäßig 96 dpi)
+def get_system_scaling():
+    try:
+        user32 = ctypes.windll.user32
+        # Horizontale Skalierungsfaktor abrufen
+        h_scale = user32.GetDpiForSystem()
+        # Vertikale Skalierungsfaktor abrufen
+        v_scale = user32.GetDpiForSystem()
+        return h_scale, v_scale
+    except Exception as e:
+        print("Fehler beim Abrufen der Systemskalierung:", str(e))
+        return None, None
+
+# Systemskalierung auslesen
+horizontal_scale, vertical_scale = get_system_scaling()
+if horizontal_scale is not None and vertical_scale is not None:
+    print("Horizontale Systemskalierung:", horizontal_scale)
+    print("Vertikale Systemskalierung:", vertical_scale)
+
+pyScale = 100/vertical_scale    
+
 # Bildschirmauflösung auslesen
 info = pygame.display.Info()
 width, height = info.current_w, info.current_h
+print("Bildschirmauflösung Breite: ", width, "Bildschirmauflösung Höhe: ",  height)
 
 #Hintergrund-Canvas-Farbe definieren
 black = (0, 0, 0)
@@ -26,7 +54,6 @@ black = (0, 0, 0)
 window = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
 x_starter = width * 0.2
 y_starter = height * 0.2 
-
 
 #Pfad des aktuellen Skripts ermittlen
 script_dir = os.path.dirname(__file__)
@@ -56,7 +83,7 @@ def load_and_scale(image_name, scale_factor=1.0):
         scaled_image = pygame.transform.scale(image, (image.get_width() * scale_factor * sf, image.get_height() * scale_factor * sf))
         image_width2 = scaled_image.get_width()
         image_height2 = scaled_image.get_height()
-        print("H<W", scale_factor, image_width, image_width2, width, image_height, image_height2, height, image_name)
+        print("W<H", scale_factor, image_width, image_width2, width, image_height, image_height2, height, image_name)
 
     #image_width2 = scaled_image.get_width()
     #image_height2 = scaled_image.get_height()
@@ -66,8 +93,12 @@ def load_and_scale(image_name, scale_factor=1.0):
 
 #Bilder laden
 #Layer Index zählt vom Hintergrund beginnend aus hoch
-layer1 = load_and_scale("canada.png")
-layer2 = load_and_scale("Foreground.png", scale_factor=0.2)
+if sysSf == 1.25:
+    layer1 = load_and_scale("canada.png", scale_factor=pyScale)
+    layer2 = load_and_scale("Foreground.png", scale_factor=0.2)
+elif sysSf != 1.25:    
+    layer1 = load_and_scale("canada.png")
+    layer2 = load_and_scale("Foreground.png", scale_factor=0.2)
 
 #Anfangsposition der Bilder
 x_layer1, x_layer2 = x_starter, x_starter
