@@ -18,3 +18,5 @@
     Sascha, Moritz: nur ein Gesicht erkennen, versuchen nur das erste erkannte Gesicht zu tracken
     Dominik: automatische Bildskalierung an Bildschirmauflösung + neues 16:9 Hintergrundbild
     Jonas: implementierung von Mediapipe in Logic-Prototype + Troubleshooting MediaPipe Installation bei Dominik + Anpassung Readme
+22.04.2024
+    Dominik: Implementierung Systemskalierung auslesen und Hintergrundbild entsprechend anpassen
