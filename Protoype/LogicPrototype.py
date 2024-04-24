@@ -109,13 +109,27 @@ lastknown_x, lastknown_y = x_starter, y_starter
 # Monitorabstand zum Betrachter in Pixeln (angenommen)
 monitor_distance = 300.0
 
-def anpassung_der_ebenen(kopf_x, kopf_y, basisposition, abstand_ebene): #basisposition kann wahrscheinlich hardcoded werden, da diese immer bei 0, 0 sind
+#Funktion zur Berechnung der Ebenenposition in Abhängigkeit des Abstand der Ebene zum Monitor
+def anpassung_der_ebenen(kopf_x, kopf_y, basisposition, abstand_ebene):
+    # Berechne den Mittelpunkt des Bildschirms anhand der global definierten Variablen 'width' und 'height'.
     mittelpunkt_x, mittelpunkt_y = width // 2, height // 2
+
+    # Berechne die Verschiebung in x-Richtung basierend auf der Differenz zwischen Kopfposition und Bildschirmmittelpunkt.
+    # 'abstand_ebene' ist der Tiefenabstand von der Basisposition zum Monitor, 'monitor_distance' ist der Abstand des Monitors zum Betrachter.
     verschiebung_x = (kopf_x - mittelpunkt_x) * (abstand_ebene / monitor_distance)
+
+    # Berechne die Verschiebung in y-Richtung ähnlich wie in x-Richtung.
     verschiebung_y = (kopf_y - mittelpunkt_y) * (abstand_ebene / monitor_distance)
+
+    # Berechne die neue x-Position durch Addition der Verschiebung zur Basis-x-Position.
     neue_position_x = basisposition[0] + verschiebung_x
+
+    # Berechne die neue y-Position durch Addition der Verschiebung zur Basis-y-Position.
     neue_position_y = basisposition[1] + verschiebung_y
+
+    # Gebe die neue Position als Tupel zurück.
     return neue_position_x, neue_position_y
+
 
 
 #Spiel-Schleife
@@ -152,9 +166,9 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
                 x_face_now = int(bbox.xmin * width)
                 y_face_now = int(bbox.ymin * height)
                 lastknown_x = (x_face_now + lastknown_x * 9) / 10
-                lastknown_y = (y_face_now + lastknown_y * 9) / 10
+                lastknown_y = (y_face_now + lastknown_y * 9) / 10 #Klärung, ob benötigt
         else:
-            lastknown_x = (lastknown_x * 9) / 10
+            lastknown_x = (lastknown_x * 9) / 10 #Klärung, ob benötigt
             lastknown_y = (lastknown_y * 9) / 10
 
         print("x: ", x_face_now, "y: ", y_face_now)
