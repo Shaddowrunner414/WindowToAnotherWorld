@@ -32,7 +32,7 @@ layer4 = load_and_scale("fence.png", scale_factor=1.0)
 x_layer1, x_layer2, x_layer3, x_layer4 = x_starter, x_starter, x_starter, x_starter
 y_layer1, y_layer2, y_layer3, y_layer4 = y_starter, y_starter, y_starter, y_starter
 
-   x_layer2 = x_neu
+        x_layer2 = x_neu
         y_layer2 = y_neu
         x_layer3 = x_neu
         y_layer3 = y_neu
