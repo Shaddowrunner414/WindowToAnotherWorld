@@ -13,3 +13,9 @@ Wechsel zwischen Python Versionen:
     Select Python Interpreter
     3.11
 
+Ebene-Position-Berechnung:
+Position der Ebene = Ausgangsposition + (Kopfpositionmitte − MonitorMittelpunkt) × (Abstand des Monitors vom Betrachter (vorerst auf 2m festgelegt)  / Abstand der Ebene vom Betrachter​ (beim laden festgelegt))
+
+Relative Pfade für das selbe Verzeichnis:
+import os
+os.chdir(os.path.dirname(os.path.abspath(__file__)))

@@ -1,5 +1,9 @@
 import pygame
 import sys
+import os
+import numpy as np
+
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 # Pygame initialisieren
 pygame.init()
@@ -17,12 +21,24 @@ vordergrund = pygame.image.load("Foreground.png").convert_alpha()
 zwischenebene = pygame.image.load("MiddleLayer.png").convert_alpha()  # Die dritte Ebene
 
 # Anfangspositionen
+x_hintergrund, y_hintergrund = 0, 0
 x_vordergrund, y_vordergrund = 50, 100
 x_zwischenebene, y_zwischenebene = 50, 100  # Startposition der Zwischenebene
 
-# Bewegungsgeschwindigkeiten
-geschwindigkeit_vordergrund = 5
-geschwindigkeit_zwischenebene = geschwindigkeit_vordergrund / 2  # Halbe Geschwindigkeit
+# Monitorabstand zum Betrachter in Pixeln (angenommen)
+monitor_distance = 300.0
+
+# Ausgangs-Kopfposition
+kopf_x = 500
+kopf_y = 400
+
+def anpassung_der_ebenen(kopf_x, kopf_y, basisposition, abstand_ebene):
+    mittelpunkt_x, mittelpunkt_y = fenster_groesse[0] // 2, fenster_groesse[1] // 2
+    verschiebung_x = (kopf_x - mittelpunkt_x) * (abstand_ebene / monitor_distance)
+    verschiebung_y = (kopf_y - mittelpunkt_y) * (abstand_ebene / monitor_distance)
+    neue_position_x = basisposition[0] + verschiebung_x
+    neue_position_y = basisposition[1] + verschiebung_y
+    return neue_position_x, neue_position_y
 
 # Spiel-Schleife
 running = True
@@ -32,24 +48,25 @@ while running:
         if event.type == pygame.QUIT:
             running = False
     
-    # Tastendrücke erkennen und Positionen aktualisieren
+    # Tastendrücke erkennen und Kopfpositionen aktualisieren
     gedrueckte_tasten = pygame.key.get_pressed()
     if gedrueckte_tasten[pygame.K_UP]:
-        y_vordergrund -= geschwindigkeit_vordergrund
-        y_zwischenebene -= geschwindigkeit_zwischenebene
+        kopf_y -= 10
     if gedrueckte_tasten[pygame.K_DOWN]:
-        y_vordergrund += geschwindigkeit_vordergrund
-        y_zwischenebene += geschwindigkeit_zwischenebene
+       kopf_y += 10
     if gedrueckte_tasten[pygame.K_LEFT]:
-        x_vordergrund -= geschwindigkeit_vordergrund
-        x_zwischenebene -= geschwindigkeit_zwischenebene
+        kopf_x -= 10
     if gedrueckte_tasten[pygame.K_RIGHT]:
-        x_vordergrund += geschwindigkeit_vordergrund
-        x_zwischenebene += geschwindigkeit_zwischenebene
+        kopf_x += 10
+
+    # Neue Position der Ebenen berechnen
+    x_zwischenebene, y_zwischenebene = anpassung_der_ebenen(kopf_x, kopf_y, (50, 100), 150)
+    x_vordergrund, y_vordergrund = anpassung_der_ebenen(kopf_x, kopf_y, (50, 100), 100)
+    x_hintergrund, y_hintergrund = anpassung_der_ebenen(kopf_x, kopf_y, (50, 100), 300)
     
     # Hintergrund, Zwischenebene und Vordergrund zeichnen
     fenster.fill(schwarz)
-    fenster.blit(hintergrund, (0, 0))
+    fenster.blit(hintergrund, (x_hintergrund, y_hintergrund))
     fenster.blit(zwischenebene, (x_zwischenebene, y_zwischenebene))
     fenster.blit(vordergrund, (x_vordergrund, y_vordergrund))
     
