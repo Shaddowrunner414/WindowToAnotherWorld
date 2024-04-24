@@ -76,34 +76,34 @@ def load_and_scale(image_name, scale_factor=1.0):
     #Automatisches Skalieren
     if image_width > image_height:
         scaled_image = pygame.transform.scale(image, (image.get_width() * scale_factor2 * sf, image.get_height() * scale_factor2 * sf))
-        #   image_width2 = scaled_image.get_width()
-        #image_height2 = scaled_image.get_height()
-       # print("W>H", scale_factor2, image_width, image_width2, width, image_height, image_height2, height, image_name)
+        image_width2 = scaled_image.get_width()
+        image_height2 = scaled_image.get_height()
+        print("W>H", scale_factor2, image_width, image_width2, width, image_height, image_height2, height, image_name)
     elif image_width <= image_height:
         scaled_image = pygame.transform.scale(image, (image.get_width() * scale_factor * sf, image.get_height() * scale_factor * sf))
-        #image_width2 = scaled_image.get_width()
-        #image_height2 = scaled_image.get_height()
-        #print("W<H", scale_factor, image_width, image_width2, width, image_height, image_height2, height, image_name)
+        image_width2 = scaled_image.get_width()
+        image_height2 = scaled_image.get_height()
+        print("W<H", scale_factor, image_width, image_width2, width, image_height, image_height2, height, image_name)
 
     #image_width2 = scaled_image.get_width()
     #image_height2 = scaled_image.get_height()
     #print(scale_factor, scale_factor2, image_width, width, image_width2, image_height2, image_name)
     print("__")
     return scaled_image
+
 #Bilder laden
 #Layer Index zählt vom Hintergrund beginnend aus hoch
-layer1 = load_and_scale("background.png")
-layer2 = load_and_scale("hill.png", scale_factor=1.0)
-layer3 = load_and_scale("tree.png", scale_factor=1.0)
-layer4 = load_and_scale("fence.png", scale_factor=1.0)
+layer1 = load_and_scale("canada.png")
+layer2 = load_and_scale("Foreground.png", scale_factor=0.2)
 
 #Anfangsposition der Bilder
-x_layer1, x_layer2, x_layer3, x_layer4 = x_starter, x_starter, x_starter, x_starter
-y_layer1, y_layer2, y_layer3, y_layer4 = y_starter, y_starter, y_starter, y_starter
+x_layer1, x_layer2 = x_starter, x_starter
+y_layer1, y_layer2 = y_starter, y_starter
 
 
 #letzte bekannte Position
 lastknown_x, lastknown_y = x_starter, y_starter
+
 
 #Spiel-Schleife
 running = True
@@ -144,7 +144,7 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
             lastknown_x = (lastknown_x * 9) / 10
             lastknown_y = (lastknown_y * 9) / 10
 
-        #print("x: ", x_face_now, "y: ", y_face_now)
+        print("x: ", x_face_now, "y: ", y_face_now)
 
         #motion smoothing um Bewegung der Ebenen kontinuierlicher und weniger sprunghaft zu gestalten
         x_neu = ((x_face_now + lastknown_x*9)/10)
@@ -153,18 +153,16 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         #layer bewegen
         x_layer2 = x_neu
         y_layer2 = y_neu
-        x_layer3 = x_neu
-        y_layer3 = y_neu
-        x_layer4 = x_neu
-        y_layer4 = y_neu
 
 
-        # Hintergrund und Vordergrund zeichnenq
+
+
+
+
+        # Hintergrund und Vordergrund zeichnen
         window.fill(black)
         window.blit(layer1, (0, 0))
-        window.blit(layer2, (x_layer2, y_layer2)) 
-        window.blit(layer3, (x_layer3, y_layer3))
-        window.blit(layer4, (x_layer4, y_layer4))
+        window.blit(layer2, (x_layer2, y_layer2))
 
         pygame.display.flip()
 
