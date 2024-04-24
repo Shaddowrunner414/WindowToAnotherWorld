@@ -51,7 +51,7 @@ print("Bildschirmauflösung Breite: ", width, "Bildschirmauflösung Höhe: ",  h
 black = (0, 0, 0)
 
 #Fenster und Mittelpunkt definieren
-window = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
+window = pygame.display.set_mode((width, height), pygame.SCALED)
 x_starter = width * 0.2
 y_starter = height * 0.2 
 
@@ -93,12 +93,8 @@ def load_and_scale(image_name, scale_factor=1.0):
 
 #Bilder laden
 #Layer Index zählt vom Hintergrund beginnend aus hoch
-if sysSf == 1.25:
-    layer1 = load_and_scale("canada.png", scale_factor=pyScale)
-    layer2 = load_and_scale("Foreground.png", scale_factor=0.2)
-elif sysSf != 1.25:    
-    layer1 = load_and_scale("canada.png")
-    layer2 = load_and_scale("Foreground.png", scale_factor=0.2)
+layer1 = load_and_scale("canada.png")
+layer2 = load_and_scale("Foreground.png", scale_factor=0.2)
 
 #Anfangsposition der Bilder
 x_layer1, x_layer2 = x_starter, x_starter
