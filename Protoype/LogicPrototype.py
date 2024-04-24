@@ -93,16 +93,29 @@ def load_and_scale(image_name, scale_factor=1.0):
 
 #Bilder laden
 #Layer Index zählt vom Hintergrund beginnend aus hoch
-layer1 = load_and_scale("canada.png")
-layer2 = load_and_scale("Foreground.png", scale_factor=0.2)
+layer1 = load_and_scale("background.png")
+layer2 = load_and_scale("hill.png", scale_factor=1.0)
+layer3 = load_and_scale("tree.png", scale_factor=1.0)
+layer4 = load_and_scale("fence.png", scale_factor=1.0)
 
 #Anfangsposition der Bilder
-x_layer1, x_layer2 = x_starter, x_starter
-y_layer1, y_layer2 = y_starter, y_starter
+x_layer1, x_layer2, x_layer3, x_layer4 = x_starter, x_starter, x_starter, x_starter
+y_layer1, y_layer2, y_layer3, y_layer4 = y_starter, y_starter, y_starter, y_starter
 
 
 #letzte bekannte Position
 lastknown_x, lastknown_y = x_starter, y_starter
+
+# Monitorabstand zum Betrachter in Pixeln (angenommen)
+monitor_distance = 300.0
+
+def anpassung_der_ebenen(kopf_x, kopf_y, basisposition, abstand_ebene): #basisposition kann wahrscheinlich hardcoded werden, da diese immer bei 0, 0 sind
+    mittelpunkt_x, mittelpunkt_y = width // 2, height // 2
+    verschiebung_x = (kopf_x - mittelpunkt_x) * (abstand_ebene / monitor_distance)
+    verschiebung_y = (kopf_y - mittelpunkt_y) * (abstand_ebene / monitor_distance)
+    neue_position_x = basisposition[0] + verschiebung_x
+    neue_position_y = basisposition[1] + verschiebung_y
+    return neue_position_x, neue_position_y
 
 
 #Spiel-Schleife
@@ -146,14 +159,15 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
 
         print("x: ", x_face_now, "y: ", y_face_now)
 
-        #motion smoothing um Bewegung der Ebenen kontinuierlicher und weniger sprunghaft zu gestalten
-        x_neu = ((x_face_now + lastknown_x*9)/10)
-        y_neu = ((y_face_now + lastknown_y*9)/10)
+        #motion smoothing des Gesichts um Bewegung der Ebenen kontinuierlicher und weniger sprunghaft zu gestalten
+        x_face_neu = ((x_face_now + lastknown_x*9)/10)
+        y_face_neu = ((y_face_now + lastknown_y*9)/10)
 
         #layer bewegen
-        x_layer2 = x_neu
-        y_layer2 = y_neu
-
+        x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_starter, y_starter), 4000)
+        x_layer2, y_layer2 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_starter, y_starter), 3000)
+        x_layer3, y_layer3 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_starter, y_starter), 800)
+        x_layer4, y_layer4 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_starter, y_starter), -400)
 
 
 
@@ -161,8 +175,10 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
 
         # Hintergrund und Vordergrund zeichnen
         window.fill(black)
-        window.blit(layer1, (0, 0))
-        window.blit(layer2, (x_layer2, y_layer2))
+        window.blit(layer1, (x_layer1, y_layer1))
+        window.blit(layer2, (x_layer2, y_layer2)) 
+        window.blit(layer3, (x_layer3, y_layer3))
+        window.blit(layer4, (x_layer4, y_layer4))
 
         pygame.display.flip()
 
