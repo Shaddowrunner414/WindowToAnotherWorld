@@ -7,9 +7,10 @@ Teilaufgaben:
 Zeitplan:
     -KW 17
         -Bilder erstellen (Moritz)
-        - Berechnung, wie schnell sich die Ebenen bewegen müssen um realistisch zu wirken (Jonas)
+        (/) Berechnung, wie schnell sich die Ebenen bewegen müssen um realistisch zu wirken (Jonas)
     -KW 18
-        -ggf. weitere Bilder erstellen (Moritz)
+        - ggf. weitere Bilder erstellen (Moritz)
+        - Auskapselung in verschiedene Dateien, etc. für bessere Zusammenarbeit (Jonas))
     -KW 19
         -Logik für Mediapipe überarbeiten und implementieren (Jonas, Dominik)
         -tracking flüssiger gestalten (Moritz, Sascha)
