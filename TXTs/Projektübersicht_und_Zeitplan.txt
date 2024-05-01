@@ -14,6 +14,9 @@ Zeitplan:
     -KW 19
         -Logik für Mediapipe überarbeiten und implementieren (Jonas, Dominik)
         -tracking flüssiger gestalten (Moritz, Sascha)
+        - Hintergrundentfernung der generierten Bilder und Konvertierung in .png
     -KW 20
+        - Kapselung in Funktionen, Klassen und einzelne Dateien für einfachere Zusammenarbeit (Jonas)
     -KW 21
+        - Implementierung von Kopf-Positions-basiertem Trigger für Zusatzaktion (Jonas)
     -KW 22
