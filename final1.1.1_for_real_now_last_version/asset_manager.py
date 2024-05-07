@@ -1,0 +1,46 @@
+import os
+import pygame
+
+# Read Screen Resolution
+pygame.init()
+info = pygame.display.Info()
+width, height = info.current_w, info.current_h
+print("Bildschirmauflösung Breite: ", width, "Bildschirmauflösung Höhe: ",  height)      
+
+# Path of the current script
+script_dir = os.path.dirname(__file__)
+
+# Function to load the images with relative paths
+def load(image_name):
+    image = pygame.image.load(os.path.join(script_dir, image_name)).convert_alpha()
+    return image
+
+# Function to scale the images and adjust them to the screen resolution
+def load_and_scale(image_name, scale_factor=1.0):
+    sf = scale_factor
+    image = load(image_name)
+    image_width = image.get_width()
+    image_height = image.get_height()
+    scale_factor = height / image_height 
+    scale_factor2 = width / image_width
+
+    # Automatic scaling
+    if image_width > image_height:
+        scaled_image = pygame.transform.scale(image, (image.get_width() * scale_factor2 * sf, image.get_height() * scale_factor2 * sf))
+        image_width2 = scaled_image.get_width()
+        image_height2 = scaled_image.get_height()
+        print("W>H", scale_factor2, image_width, image_width2, width, image_height, image_height2, height, image_name)
+    elif image_width <= image_height:
+        scaled_image = pygame.transform.scale(image, (image.get_width() * scale_factor * sf, image.get_height() * scale_factor * sf))
+        image_width2 = scaled_image.get_width()
+        image_height2 = scaled_image.get_height()
+        print("W<H", scale_factor, image_width, image_width2, width, image_height, image_height2, height, image_name)
+
+    return scaled_image
+
+# Load images
+# Layer index counts up from the background
+layer1 = load_and_scale("AIBackground.png")
+layer2 = load_and_scale("AIMiddleground.png", scale_factor=1.0)
+layer3 = load_and_scale("AIForeground.png", scale_factor=1.0)
+layer4 = load_and_scale("AIWindow.png", scale_factor=1.0)

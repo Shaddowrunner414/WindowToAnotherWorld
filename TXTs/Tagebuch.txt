@@ -22,3 +22,6 @@
     Dominik: Implementierung Systemskalierung auslesen und Hintergrundbild entsprechend anpassen
 24.04.2024
     Sascha: Das getrackte gesicht springt nichtmehr wenn eine neues größeres entdeckt wird sondern freezed
+07.05.2024
+    Jonas:  Hintergrund der generierten Bilder entfernt und auf 16:9 zugeschnitten
+            Kapselung in spezialisierte Dateien und Implementierung der Intel Realsense Camera (mit Übernahme weiter Teile der bisherigen Mediapipe, Tracking und Movement Logik)
