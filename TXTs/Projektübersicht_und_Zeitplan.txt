@@ -14,7 +14,7 @@ Zeitplan:
     -KW 19
         -Logik für Mediapipe überarbeiten und implementieren (Jonas, Dominik)
         -tracking flüssiger gestalten (Moritz, Sascha)
-        - Hintergrundentfernung der generierten Bilder und Konvertierung in .png
+        - Hintergrundentfernung der generierten Bilder und Konvertierung in .png (Jonas)
     -KW 20
         - Kapselung in Funktionen, Klassen und einzelne Dateien für einfachere Zusammenarbeit (Jonas, Dominik)
         - nur das erste erkannten Gesicht tracken (Sasha, Moritz)
