@@ -10,13 +10,13 @@ Zeitplan:
         (/) Berechnung, wie schnell sich die Ebenen bewegen müssen um realistisch zu wirken (Jonas)
     -KW 18
         - ggf. weitere Bilder erstellen (Moritz)
-        - Auskapselung in verschiedene Dateien, etc. für bessere Zusammenarbeit (Jonas))
+        - Auskapselung in verschiedene Dateien, etc. für bessere Zusammenarbeit (Jonas)
     -KW 19
         -Logik für Mediapipe überarbeiten und implementieren (Jonas, Dominik)
         -tracking flüssiger gestalten (Moritz, Sascha)
         - Hintergrundentfernung der generierten Bilder und Konvertierung in .png
     -KW 20
-        - Kapselung in Funktionen, Klassen und einzelne Dateien für einfachere Zusammenarbeit (Jonas)
+        - Kapselung in Funktionen, Klassen und einzelne Dateien für einfachere Zusammenarbeit (Jonas, Dominik)
         - nur das erste erkannten Gesicht tracken (Sasha, Moritz)
     -KW 21
         - Implementierung von Kopf-Positions-basiertem Trigger für Zusatzaktion (Jonas)
