@@ -2,7 +2,7 @@ Teilaufgaben:
     -Tracking flüssiger gestalten
     -Bilder für das virtuelle Fenster erstellen 
     -Logik für Mediapipe überarbeiten und implementieren
-    -(Spezielles Gesicht tracken)
+    -Spezielles Gesicht tracken
 
 Zeitplan:
     -KW 17
@@ -17,6 +17,9 @@ Zeitplan:
         - Hintergrundentfernung der generierten Bilder und Konvertierung in .png
     -KW 20
         - Kapselung in Funktionen, Klassen und einzelne Dateien für einfachere Zusammenarbeit (Jonas)
+        - nur das erste erkannten Gesicht tracken (Sasha, Moritz)
     -KW 21
         - Implementierung von Kopf-Positions-basiertem Trigger für Zusatzaktion (Jonas)
+        - Überarbeitung der und Fertigstellung der Aufgaben (Alle)
     -KW 22
+        - finale Implementation (Alle)
