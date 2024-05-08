@@ -25,3 +25,6 @@
 07.05.2024
     Jonas:  Hintergrund der generierten Bilder entfernt und auf 16:9 zugeschnitten
             Kapselung in spezialisierte Dateien und Implementierung der Intel Realsense Camera (mit Übernahme weiter Teile der bisherigen Mediapipe, Tracking und Movement Logik)
+08.05.2024
+    Sascha: DetectFirstFace trackt und returned nun den Gesichtsmittelpunkt und returned die Koordinaten.
+            Das Smoothing der werte wurde angepasst und der Code ist zum Importieren in die Main-Methode bereit.

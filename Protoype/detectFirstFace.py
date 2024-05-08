@@ -42,7 +42,12 @@ class FaceCenterDetector:
                 center_x = int(center_x * image.shape[1])
                 center_y = int(center_y * image.shape[0])
 
+                # Motion smoothing of the face to make the movement of the layers more continuous and less jerky
+                #smooth_center_x = (center_x + lastknown_x * 9) // 10 # Clarification if needed
+                #smoot_center_y = (center_y + lastknown_y * 9) // 10 
+
                 return center_x, center_y
+                #return smooth_center_x, smooth_center_y
 
     def close(self):
         self.face_mesh.close()
