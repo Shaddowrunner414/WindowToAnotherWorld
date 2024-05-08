@@ -2,13 +2,16 @@ import cv2
 from camera_manager import CameraManager
 from window_manager import WindowManager
 from face_detector import FaceDetector
-#from image_mover import adjust_layers, x_starter, y_starter, new_position_x, new_position_y
+from image_mover import adjust_layers
+#from face_detector import smooth_face_x_center, smoot_face_y_center
+from asset_manager import x_starter, y_starter 
 
 def main():
     camera_manager = CameraManager("Intel RealSense D435")
     window_manager_original = WindowManager("Original")
     window_manager_foreground = WindowManager("Foreground")
     face_detector = FaceDetector()
+    smoot_face_x_center, smoot_face_y_center = face_detector.process_frame(foreground_frame)
 
     camera_manager.start()
 
@@ -21,10 +24,10 @@ def main():
             
 
             # Move layers
-            #x_layer1, y_layer1 = adjust_layers(new_position_x, new_position_y, (x_starter, y_starter), 4000)
-            #x_layer2, y_layer2 = adjust_layers(new_position_x, new_position_y, (x_starter, y_starter), 3000)
-            #x_layer3, y_layer3 = adjust_layers(new_position_x, new_position_y, (x_starter, y_starter), 800)
-            #x_layer4, y_layer4 = adjust_layers(new_position_x, new_position_y, (x_starter, y_starter), -400)
+            x_layer1, y_layer1 = adjust_layers(smoot_face_x_center, smoot_face_y_center, (x_starter, y_starter), 4000)
+            x_layer2, y_layer2 = adjust_layers(smoot_face_x_center, smoot_face_y_center, (x_starter, y_starter), 3000)
+            x_layer3, y_layer3 = adjust_layers(smoot_face_x_center, smoot_face_y_center, (x_starter, y_starter), 800)
+            x_layer4, y_layer4 = adjust_layers(smoot_face_x_center, smoot_face_y_center, (x_starter, y_starter), -400)
 
                 
             window_manager_original.show_frame(original_frame)

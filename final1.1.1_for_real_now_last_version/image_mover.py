@@ -27,3 +27,5 @@ def adjust_layers(head_x, head_y, base_position, layer_distance):
 
     #Return the new x and y positions.
     return new_position_x, new_position_y
+
+    # combine the layers into one single video stream to give to the window manager
