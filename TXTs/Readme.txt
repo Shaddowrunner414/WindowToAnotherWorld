@@ -24,6 +24,8 @@ Pip packages:
 		(wenn andere Python Versionen installiert: Versuche: C:\Users\DEINEN_NAME_HIER_EINFÜGEN\AppData\Local\Programs\Python\Python311/python -m pip install mediapipe)
 		Für mediapipe: Python Interpreter auf 3.11 einstellen (Strg + Shift + P -> Python: Select Interpreter)
 		und Mediapipe für 3.11 installieren
+	pyrealsense2:
+		Pfad/zur/Installation/Python311/python.exe -m pip install pyrealsense2
 
 Python Tipps:
 Wenn mehrere Python Versionen installiert sind und eine bestimmte Version genutzt werde soll, so kann man vor die Python-
