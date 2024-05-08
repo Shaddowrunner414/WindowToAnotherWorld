@@ -1,13 +1,13 @@
 import pyrealsense2 as rs
 import numpy as np
 import cv2
+from asset_manager import background_removal_threshold
 
 class CameraManager:
     def __init__(self, device_id):
         self.device_id = device_id
         self.pipeline = rs.pipeline()
         self.config = rs.config()
-        self.threshold = 1.5  # Threshold in meters
 
         # List all available RealSense devices
         context = rs.context()
@@ -42,7 +42,7 @@ class CameraManager:
 
         # Generate a simple foreground mask by ignoring all depth values that are above a threshold
         depth_scale = self.pipeline.get_active_profile().get_device().first_depth_sensor().get_depth_scale()
-        threshold = self.threshold / depth_scale
+        threshold = background_removal_threshold / depth_scale
         foreground_mask = np.where((depth_image > 0) & (depth_image < threshold), 255, 0).astype(np.uint8)
 
         # Apply the mask to the color image to extract the foreground

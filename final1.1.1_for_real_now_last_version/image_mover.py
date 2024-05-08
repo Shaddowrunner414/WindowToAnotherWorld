@@ -1,19 +1,10 @@
-from asset_manager import width, height
+from asset_manager import width, height, x_starter, y_starter, monitor_distance
 
-
-#Define the initial position of the images
-x_starter = width * 0.2
-y_starter = height * 0.2
 
 # Initial position of the images
 x_layer1, x_layer2, x_layer3, x_layer4 = x_starter, x_starter, x_starter, x_starter
 y_layer1, y_layer2, y_layer3, y_layer4 = y_starter, y_starter, y_starter, y_starter
 
-# Last known position
-lastknown_x, lastknown_y = x_starter, y_starter
-
-# Monitor distance to the viewer in pixels (assumed)
-monitor_distance = 300.0
 
 # Function to calculate the layer position depending on the distance of the layer to the monitor
 def adjust_layers(head_x, head_y, base_position, layer_distance):

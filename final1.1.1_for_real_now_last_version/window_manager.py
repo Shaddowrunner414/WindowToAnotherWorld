@@ -12,3 +12,6 @@ class WindowManager:
 
     def close_window(self):
         cv2.destroyWindow(self.window_name)
+
+
+    # insert auto scaling here somewhere

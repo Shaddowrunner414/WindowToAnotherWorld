@@ -2,7 +2,7 @@ import cv2
 from camera_manager import CameraManager
 from window_manager import WindowManager
 from face_detector import FaceDetector
-from image_mover import adjust_layers, x_starter, y_starter, new_position_x, new_position_y
+#from image_mover import adjust_layers, x_starter, y_starter, new_position_x, new_position_y
 
 def main():
     camera_manager = CameraManager("Intel RealSense D435")
@@ -19,8 +19,6 @@ def main():
             if coords:
                 print(f"Face detected at {coords}")
             
-            # Last known position
-            lastknown_x, lastknown_y = x_starter, y_starter
 
             # Move layers
             #x_layer1, y_layer1 = adjust_layers(new_position_x, new_position_y, (x_starter, y_starter), 4000)

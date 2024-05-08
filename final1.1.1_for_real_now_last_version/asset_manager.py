@@ -7,6 +7,21 @@ info = pygame.display.Info()
 width, height = info.current_w, info.current_h
 print("Bildschirmauflösung Breite: ", width, "Bildschirmauflösung Höhe: ",  height)      
 
+#Define the initial position of the images
+x_starter = width * 0.2
+y_starter = height * 0.2
+
+# Last known position
+lastknown_x, lastknown_y = x_starter, y_starter
+
+
+# Monitor distance to the viewer in pixels (assumed)
+monitor_distance = 300.0
+
+# Maxmum Distance before the background removal starts
+background_removal_threshold = 1.5 # in meters
+
+
 # Path of the current script
 script_dir = os.path.dirname(__file__)
 
