@@ -47,6 +47,7 @@ class FaceCenterDetector:
                 #smoot_center_y = (center_y + lastknown_y * 9) // 10 
 
                 return center_x, center_y
+                #return smooth_center_x, smooth_center_y
 
     def close(self):
         self.face_mesh.close()
