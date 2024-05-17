@@ -1,6 +1,6 @@
 import cv2
 import mediapipe as mp
-from main import lastknown_x, lastknown_y
+#from main import lastknown_x, lastknown_y
 
 class FaceDetector:
     def __init__(self):
@@ -30,8 +30,9 @@ class FaceDetector:
                 face_y_center = (ymin + ymax) // 2
 
                 # Motion smoothing of the face to make the movement of the layers more continuous and less jerky
-                smooth_face_x_center = (face_x_center + lastknown_x * 9) // 10 # Clarification if needed
-                smoot_face_y_center = (face_y_center + lastknown_y * 9) // 10         
+                #smooth_face_x_center = (face_x_center + lastknown_x * 9) // 10 # Clarification if needed
+                #smoot_face_y_center = (face_y_center + lastknown_y * 9) // 10         
             
 
-                return smooth_face_x_center, smoot_face_y_center
+                #return smooth_face_x_center, smoot_face_y_center
+                return face_x_center, face_y_center

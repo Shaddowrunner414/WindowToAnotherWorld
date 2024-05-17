@@ -1,4 +1,8 @@
-from asset_manager import width, height, x_starter, y_starter, monitor_distance
+from asset_manager import AssetManager 
+
+width, height, = AssetManager.width, AssetManager.height
+x_starter, y_starter = AssetManager.x_starter, AssetManager.y_starter
+monitor_distance = AssetManager.monitor_distance
 
 
 # Initial position of the images

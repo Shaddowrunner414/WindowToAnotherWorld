@@ -29,3 +29,7 @@
     Sascha: DetectFirstFace trackt und returned nun den Gesichtsmittelpunkt und returned die Koordinaten.
             Das Smoothing der werte wurde angepasst und der Code ist zum Importieren in die Main-Methode bereit.
     Dominik & Jonas: Kapselung in spezialisierte Dateien und Implementierung der Intel Realsense Camera (mit Übernahme weiter Teile der bisherigen Mediapipe, Tracking und Movement Logik)
+14.05.2024
+    Dominik & Jonas: Kapselung in spezialisierte Dateien und Debugging
+15.05.2024
+    Dominik & Jonas: Kapselung in spezialisierte Dateien und Debugging
