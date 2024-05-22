@@ -16,6 +16,7 @@ class FaceCenterDetector:
         self.quadrant_duration_threshold = 4  # seconds
         self.upper_right_triggered = False
         self.face_detected = False
+        self.count = 0;
 
     def get_face_center(self, frame):
         # Convert the BGR image to RGB.
@@ -55,6 +56,7 @@ class FaceCenterDetector:
         if center_x > frame_width / 2 and center_y < frame_height / 2:
             if self.quadrant_start_time is None:
                 self.quadrant_start_time = time.time()
+
             else:
                 elapsed_time = time.time() - self.quadrant_start_time
                 if elapsed_time >= self.quadrant_duration_threshold and not self.upper_right_triggered:
@@ -64,7 +66,8 @@ class FaceCenterDetector:
             self.quadrant_start_time = None
 
         if self.upper_right_triggered:
-            print("Face detected in the upper right quadrant for at least 4 seconds")
+            self.count += 1
+            print("Face detected in the upper right quadrant for at least 4 seconds for {} seconds".format(self.count))
 
     def process_frame(self, frame):
         face_center = self.get_face_center(frame)
@@ -78,6 +81,7 @@ class FaceCenterDetector:
             if self.face_detected:
                 print("blinds closed")
                 self.face_detected = False
+                self.count = 0
 
     def close(self):
         self.face_mesh.close()
