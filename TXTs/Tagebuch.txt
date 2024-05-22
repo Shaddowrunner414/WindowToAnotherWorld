@@ -34,5 +34,6 @@
 15.05.2024
     Dominik & Jonas: Kapselung in spezialisierte Dateien und Debugging
 22.05.2024 
-    Sascha: Implementierung der Grundlage für Heißluftballon. Sobald das Gesicht für kurze Zeit in einem bildschirm quadranten bleibt printed es einen befehl in der konsole
+    Sascha: Implementierung der Grundlage für Heißluftballon. Sobald das Gesicht für kurze Zeit in einem bildschirm quadranten bleibt printed es einen counter in der konsole der konstant + 1 addiert
+            und sich bei verlassen des Bildschirms auf 0 resettet.
             Implementierung enterExitScreen. Wenn das Gesicht die Kamera betritt oder verlässt wiid je nachdem "blinds open" oder "blinds closed" geprinted
