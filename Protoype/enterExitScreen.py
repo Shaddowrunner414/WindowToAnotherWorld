@@ -63,7 +63,10 @@ class FaceCenterDetector:
                     self.upper_right_triggered = True
                     
         else:
-            self.quadrant_start_time = None
+            if self.quadrant_start_time is not None and self.upper_right_triggered:
+                # Preserve elapsed time
+                self.quadrant_start_time = time.time() - self.quadrant_duration_threshold  
+
 
         if self.upper_right_triggered:
             self.count += 1
@@ -81,6 +84,10 @@ class FaceCenterDetector:
             if self.face_detected:
                 print("blinds closed")
                 self.face_detected = False
+                # Reset the start time when no face is detected
+                self.quadrant_start_time = None
+                 # Reset trigger when no face is detected
+                self.upper_right_triggered = False
                 self.count = 0
 
     def close(self):
