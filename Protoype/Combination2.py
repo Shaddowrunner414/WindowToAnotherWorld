@@ -25,8 +25,8 @@ class CameraManager:
         realsense_devices = {device.get_info(rs.camera_info.name): device.get_info(rs.camera_info.serial_number) for device in device_list}
 
         # Configure and start the RealSense camera
-        if device_id in realsense_devices:
-            self.config.enable_device(realsense_devices[device_id])  # Use the serial number
+        if device_id in realsense_devices.values():
+            self.config.enable_device(device_id)  # Use the serial number directly
         self.config.enable_stream(rs.stream.depth)
         self.config.enable_stream(rs.stream.color)
 
@@ -74,7 +74,10 @@ class FaceCenterDetector:
         self.quadrant_duration_threshold = 4  # seconds
         self.upper_right_triggered = False
         self.face_detected = False
+        self.face_detected_start_time = None  
+        self.no_face_detected_start_time = None
         self.count = 0
+        self.curtains_visible = True # Default to be visible at the start
 
     def get_face_center(self, frame):
         # Convert the BGR image to RGB.
@@ -138,6 +141,14 @@ class FaceCenterDetector:
             if not self.face_detected:
                 print("blinds open")
                 self.face_detected = True
+                # Timer to close curtains again after 3 seconds
+                self.face_detected_start_time = time.time()
+                self.no_face_detected_start_time = None
+            else:
+                elapsed_face_time = time.time() - self.face_detected_start_time
+                if elapsed_face_time > 3:
+                    return False # Open curtains after 3 seconds
+            
         else:
             if self.face_detected:
                 print("blinds closed")
@@ -147,6 +158,14 @@ class FaceCenterDetector:
                  # Reset trigger when no face is detected
                 self.upper_right_triggered = False
                 self.count = 0
+                self.no_face_detected_start_time = time.time()  # Start the no face detected timer
+
+        # Check if no face has been detected for longer than 3 seconds
+        if self.no_face_detected_start_time is not None:
+            elapsed_no_face_time = time.time() - self.no_face_detected_start_time
+            if elapsed_no_face_time > 3:
+                return True  # Indicate that curtains should be visible
+        return False  # Indicate that curtains should not be visible
 
     def close(self):
         self.face_mesh.close()
@@ -158,19 +177,16 @@ mp_drawing = mp.solutions.drawing_utils
 
 # Initialize Pygame and OpenCV
 pygame.init()
-#cap = cv2.VideoCapture(0)  # 0 stands for the first camera
 
 # Initialize RealSense CameraManager
-camera = CameraManager(device_id="Intel RealSense D435")  # Set your actual device ID
+camera = CameraManager(device_id="0123456789")  # Set your actual device ID (Serial Number)
 camera.start()
 
-# Load face detection classifier
-#face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
-
 # Read system scaling
-scaleFactor = ctypes.windll.shcore.GetScaleFactorForDevice(0) / 100
-print("\nScaling: ", scaleFactor)
-sysSf = scaleFactor
+if os.name == 'nt':  # Check if the OS is Windows
+    scaleFactor = ctypes.windll.shcore.GetScaleFactorForDevice(0) / 100
+    print("\nScaling: ", scaleFactor)
+    sysSf = scaleFactor
 
 # Get system scaling for Pygame (default 96 dpi)
 def get_system_scaling():
@@ -241,6 +257,10 @@ layer2 = load_and_scale("hill.png", scale_factor=1.4)
 layer3 = load_and_scale("tree.png", scale_factor=1.95)
 layer4 = load_and_scale("fence.png", scale_factor=2)
 
+layer0_frame = load_and_scale("AIWindow.png")
+layer0_leftCurtain = load_and_scale("leftExtendedCurtainAWithImpressum.png")
+layer0_rightCurtain = load_and_scale("rightExtendedCurtainA.png")
+
 # Initial positions (centered)
 x_layer1, y_layer1 = x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2
 x_layer2, y_layer2 = x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2
@@ -261,13 +281,13 @@ def anpassung_der_ebenen(kopf_x, kopf_y, basisposition, abstand_ebene, layer_wid
     verschiebung_x = (mittelpunkt_x - kopf_x) * (abstand_ebene / monitor_distance)
     verschiebung_y = (mittelpunkt_y - kopf_y) * (abstand_ebene / monitor_distance)
 
-    # Invert the x-axis movement if specified
-    if invert_x:
-        verschiebung_x = -verschiebung_x
+    # # Invert the x-axis movement if specified
+    # if invert_x:
+    #     verschiebung_x = -verschiebung_x
 
-    # Invert the y-axis movement if specified
-    if invert_y:
-        verschiebung_y = -verschiebung_y
+    # # Invert the y-axis movement if specified
+    # if invert_y:
+    #     verschiebung_y = -verschiebung_y
 
     neue_position_x = basisposition[0] + verschiebung_x
     neue_position_y = basisposition[1] + verschiebung_y
@@ -286,43 +306,37 @@ def anpassung_der_ebenen(kopf_x, kopf_y, basisposition, abstand_ebene, layer_wid
 
 # Game loop
 running = True
+face_detector = FaceCenterDetector()
+
 with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detection:
     while running:
-        face_detector = FaceCenterDetector()
         color_image_rgb, foreground_image = camera.get_frame()
         image = foreground_image
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_q:
+                    running = False
 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = face_detection.process(image)
 
         x_face_now, y_face_now = x_center, y_center
-
         
         # Process the frame to check face detection
-        face_center = face_detector.process_frame(image)
+        face_center = face_detector.get_face_center(image)
         if face_center is not None:
             x_face_now, y_face_now = face_center
         
-        # if results.detections:
-        #     for detection in results.detections:
-        #         bbox = detection.location_data.relative_bounding_box
-        #         x_face_now = int(bbox.xmin * width)
-        #         y_face_now = int(bbox.ymin * height)              
-        #         lastknown_x = (x_face_now + lastknown_x * 9) / 10
-        #         lastknown_y = (y_face_now + lastknown_y * 9) / 10
-        else:
-            lastknown_x = (lastknown_x * 9) / 10
-            lastknown_y = (lastknown_y * 9) / 10
-
-        print("x: ", x_face_now, "y: ", y_face_now)
-
         # Smooth the face position  
         x_face_neu = ((x_face_now + lastknown_x * 9) / 10)
         y_face_neu = ((y_face_now + lastknown_y * 9) / 10)
+
+        
+        # Check if the face has been detected for longer than 3 seconds or if no face has been detected for 3 seconds
+        curtains_visible = face_detector.process_frame(image)
 
         # Adjust the speed and inversion by changing the 'abstand_ebene' values and 'invert_x'/'invert_y' flags
         x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), 100, layer1.get_width(), layer1.get_height(), invert_x=True, invert_y=False)  # Slowest layer
@@ -337,16 +351,23 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         window.blit(layer3, (x_layer3, y_layer3))
         window.blit(layer4, (x_layer4, y_layer4))
 
+        window.blit(layer0_frame, (0, 0))
+
+        # Draw a small cross at the face coordinates
+        cross_color = (255, 0, 0)  # Red color
+        cross_size = 10  # Size of the cross
+        pygame.draw.line(window, cross_color, (x_face_neu - cross_size, y_face_neu), (x_face_neu + cross_size, y_face_neu), 2)
+        pygame.draw.line(window, cross_color, (x_face_neu, y_face_neu - cross_size), (x_face_neu, y_face_neu + cross_size), 2)
+
+        # Display curtains if face is not detected or not detected long enough
+        if curtains_visible:
+            window.blit(layer0_leftCurtain, (0, 0))
+            window.blit(layer0_rightCurtain, (width - layer0_rightCurtain.get_width(), 0))
+
         pygame.display.flip()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_q:
-                    running = False
-
-#cap.release()
+# Clean up resources
+camera.stop()
+face_detector.close()
 pygame.quit()
 sys.exit()
-
