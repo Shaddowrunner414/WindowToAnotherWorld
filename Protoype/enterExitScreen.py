@@ -16,7 +16,9 @@ class FaceCenterDetector:
         self.quadrant_duration_threshold = 4  # seconds
         self.upper_right_triggered = False
         self.face_detected = False
-        self.count = 0;
+        self.count = 0
+        self.last_face_detected_time = None
+        self.last_face_lost_time = None
 
     def get_face_center(self, frame):
         # Convert the BGR image to RGB.
@@ -56,17 +58,14 @@ class FaceCenterDetector:
         if center_x > frame_width / 2 and center_y < frame_height / 2:
             if self.quadrant_start_time is None:
                 self.quadrant_start_time = time.time()
-
             else:
                 elapsed_time = time.time() - self.quadrant_start_time
                 if elapsed_time >= self.quadrant_duration_threshold and not self.upper_right_triggered:
                     self.upper_right_triggered = True
-                    
         else:
             if self.quadrant_start_time is not None and self.upper_right_triggered:
                 # Preserve elapsed time
                 self.quadrant_start_time = time.time() - self.quadrant_duration_threshold  
-
 
         if self.upper_right_triggered:
             self.count += 1
@@ -74,25 +73,35 @@ class FaceCenterDetector:
 
     def process_frame(self, frame):
         face_center = self.get_face_center(frame)
+        current_time = time.time()
+
         if face_center is not None:
             center_x, center_y = face_center
             self.check_upper_right_quadrant(center_x, center_y, frame.shape[1], frame.shape[0])
+            
             if not self.face_detected:
-                print("blinds open")
-                self.face_detected = True
+                if self.last_face_detected_time is None:
+                    self.last_face_detected_time = current_time
+                elif current_time - self.last_face_detected_time >= 2:
+                    print("blinds open")
+                    self.face_detected = True
+                    self.last_face_detected_time = None
         else:
             if self.face_detected:
-                print("blinds closed")
-                self.face_detected = False
-                # Reset the start time when no face is detected
-                self.quadrant_start_time = None
-                 # Reset trigger when no face is detected
-                self.upper_right_triggered = False
-                self.count = 0
+                if self.last_face_lost_time is None:
+                    self.last_face_lost_time = current_time
+                elif current_time - self.last_face_lost_time >= 2:
+                    print("blinds closed")
+                    self.face_detected = False
+                    self.last_face_lost_time = None
+                    self.quadrant_start_time = None
+                    self.upper_right_triggered = False
+                    self.count = 0
 
     def close(self):
         self.face_mesh.close()
 
+print("blinds closed")
 # Initialize the video capture object.
 cap = cv2.VideoCapture(0)
 
