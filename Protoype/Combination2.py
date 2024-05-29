@@ -285,9 +285,9 @@ def anpassung_der_ebenen(kopf_x, kopf_y, basisposition, abstand_ebene, layer_wid
     # if invert_x:
     #     verschiebung_x = -verschiebung_x
 
-    # # Invert the y-axis movement if specified
-    # if invert_y:
-    #     verschiebung_y = -verschiebung_y
+    # Invert the y-axis movement if specified
+    if invert_y:
+        verschiebung_y = -verschiebung_y
 
     neue_position_x = basisposition[0] + verschiebung_x
     neue_position_y = basisposition[1] + verschiebung_y
@@ -331,18 +331,18 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
             x_face_now, y_face_now = face_center
         
         # Smooth the face position  
-        x_face_neu = ((x_face_now + lastknown_x * 9) / 10)
-        y_face_neu = ((y_face_now + lastknown_y * 9) / 10)
+        x_face_neu = ((x_face_now*3 + lastknown_x * 9) / 10)
+        y_face_neu = ((y_face_now*3 + lastknown_y * 9) / 10)
 
         
         # Check if the face has been detected for longer than 3 seconds or if no face has been detected for 3 seconds
         curtains_visible = face_detector.process_frame(image)
 
         # Adjust the speed and inversion by changing the 'abstand_ebene' values and 'invert_x'/'invert_y' flags
-        x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), 200, layer1.get_width(), layer1.get_height(), invert_x=True, invert_y=False)  # Slowest layer
-        x_layer2, y_layer2 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2), 600, layer2.get_width(), layer2.get_height(), invert_x=True, invert_y=False)  # Faster layer
-        x_layer4, y_layer4 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2), 1800, layer4.get_width(), layer4.get_height(), invert_x=True, invert_y=False)  # Fastest layer
-        x_layer3, y_layer3 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2), 1400, layer3.get_width(), layer3.get_height(), invert_x=True, invert_y=False)   # Even faster layer
+        x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), 200, layer1.get_width(), layer1.get_height(), invert_x=True, invert_y=True)  # Slowest layer
+        x_layer2, y_layer2 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2), 600, layer2.get_width(), layer2.get_height(), invert_x=True, invert_y=True)  # Faster layer
+        x_layer4, y_layer4 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2), 1800, layer4.get_width(), layer4.get_height(), invert_x=True, invert_y=True)  # Fastest layer
+        x_layer3, y_layer3 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2), 1400, layer3.get_width(), layer3.get_height(), invert_x=True, invert_y=True)   # Even faster layer
         
 
         window.fill(black)
