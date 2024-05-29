@@ -227,7 +227,7 @@ def load(image_name):
     return image
 
 # Function to scale images
-def load_and_scale(image_name, scale_factor=1.2):  # Default scale factor increased to 1.2
+def load_and_scale(image_name, scale_factor=1.0):  # Default scale factor increased to 1.2
     print("__")
     sf = scale_factor
     image = load(image_name)
@@ -253,9 +253,9 @@ def load_and_scale(image_name, scale_factor=1.2):  # Default scale factor increa
 
 # Load images
 layer1 = load_and_scale("background.png")
-layer2 = load_and_scale("hill.png", scale_factor=1.4)
-layer3 = load_and_scale("tree.png", scale_factor=1.95)
-layer4 = load_and_scale("fence.png", scale_factor=2)
+layer2 = load_and_scale("hill.png", scale_factor=1.1)
+layer3 = load_and_scale("tree.png", scale_factor=1.3)
+layer4 = load_and_scale("fence.png", scale_factor=1.45 )
 
 layer0_frame = load_and_scale("AIWindow.png")
 layer0_leftCurtain = load_and_scale("leftExtendedCurtainAWithImpressum.png")
@@ -339,10 +339,10 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         curtains_visible = face_detector.process_frame(image)
 
         # Adjust the speed and inversion by changing the 'abstand_ebene' values and 'invert_x'/'invert_y' flags
-        x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), 100, layer1.get_width(), layer1.get_height(), invert_x=True, invert_y=False)  # Slowest layer
-        x_layer2, y_layer2 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2), 300, layer2.get_width(), layer2.get_height(), invert_x=True, invert_y=False)  # Faster layer
-        x_layer4, y_layer4 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2), 900, layer4.get_width(), layer4.get_height(), invert_x=True, invert_y=False)  # Fastest layer
-        x_layer3, y_layer3 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2), 700, layer3.get_width(), layer3.get_height(), invert_x=True, invert_y=False)   # Even faster layer
+        x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), 200, layer1.get_width(), layer1.get_height(), invert_x=True, invert_y=False)  # Slowest layer
+        x_layer2, y_layer2 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2), 600, layer2.get_width(), layer2.get_height(), invert_x=True, invert_y=False)  # Faster layer
+        x_layer4, y_layer4 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2), 1800, layer4.get_width(), layer4.get_height(), invert_x=True, invert_y=False)  # Fastest layer
+        x_layer3, y_layer3 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2), 1400, layer3.get_width(), layer3.get_height(), invert_x=True, invert_y=False)   # Even faster layer
         
 
         window.fill(black)
