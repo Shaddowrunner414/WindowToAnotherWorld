@@ -185,7 +185,6 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         cross_size = 10  # Size of the cross
         pygame.draw.line(window, cross_color, (x_face_neu - cross_size, y_face_neu), (x_face_neu + cross_size, y_face_neu), 2)
         pygame.draw.line(window, cross_color, (x_face_neu, y_face_neu - cross_size), (x_face_neu, y_face_neu + cross_size), 2)
-q
 
         pygame.display.flip()
 
