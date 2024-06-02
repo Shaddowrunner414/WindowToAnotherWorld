@@ -1,5 +1,7 @@
 import cv2
 import pygame
+import numpy as np
+from asset_manager import AssetManager
 
 
 class WindowManager:
@@ -9,7 +11,14 @@ class WindowManager:
 
     def show_frame(self, frame, coords=None):
         if not self.screen:
-            self.screen = pygame.display.set_mode(frame.shape[:2])
+            self.screen = pygame.display.set_mode(AssetManager.init(self), pygame.SCALED)
+
+        # Convert BGR (OpenCV) to RGB (pygame)
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+        # Transpose the frame to fix the rotation
+        frame = np.transpose(frame, (1, 0, 2))
+
         surface = pygame.surfarray.make_surface(frame)
         if coords:
             x, y = coords

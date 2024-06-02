@@ -47,9 +47,5 @@ class CameraManager:
 
         # Apply the mask to the color image to extract the foreground
         foreground_image = cv2.bitwise_and(color_image_rgb, color_image_rgb, mask=foreground_mask)
-
-        # Combine the original image and the image with the background removed side by side
-        #combined_image = np.hstack((color_image_rgb, foreground_image))
-        # not used anymore, the streams are now returned separately
     
         return color_image_rgb, foreground_image
