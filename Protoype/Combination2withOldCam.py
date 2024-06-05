@@ -41,7 +41,6 @@ class CameraManager:
 
         return color_image_rgb, foreground_image
 
-
 class FaceCenterDetector:
     def __init__(self):
         self.mp_face_mesh = mp.solutions.face_mesh
@@ -124,7 +123,7 @@ class FaceCenterDetector:
                     self.last_face_detected_time = current_time
                 elif current_time - self.last_face_detected_time >= 2:
                     print("blinds open")
-                    curtains_visible = False
+                    #curtains_visible = False
                     self.face_detected = True
                     self.last_face_detected_time = None
         else:
@@ -133,7 +132,7 @@ class FaceCenterDetector:
                     self.last_face_lost_time = current_time
                 elif current_time - self.last_face_lost_time >= 2:
                     print("blinds closed")
-                    curtains_visible = True
+                    #curtains_visible = True
                     self.face_detected = False
                     self.last_face_lost_time = None
                     self.quadrant_start_time = None
@@ -300,7 +299,7 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         # Process the frame to check face detection
         face_center = face_detector.get_face_center(image)
         if face_center is not None:
-            x_face_now, y_face_now = face_center
+            x_face_now, y_face_now = face_center  
         
         # Smooth the face position  
         x_face_neu = ((x_face_now*3 + lastknown_x * 9) / 10)
@@ -308,7 +307,8 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
 
         
         # Check if the face has been detected for longer than 3 seconds or if no face has been detected for 3 seconds
-        curtains_visible = face_detector.process_frame(image)
+        face_detector.process_frame(image)
+        curtains_visible = not face_detector.face_detected
 
         # Adjust the speed and inversion by changing the 'abstand_ebene' values and 'invert_x'/'invert_y' flags
         x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), 200, layer1.get_width(), layer1.get_height(), invert_x=True, invert_y=True)  # Slowest layer
