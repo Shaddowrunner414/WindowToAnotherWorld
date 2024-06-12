@@ -95,7 +95,7 @@ class FaceCenterDetector:
         return None
 
     def check_upper_right_quadrant(self, center_x, center_y, frame_width, frame_height):
-        if center_x < frame_width / 2 and center_y < frame_height / 2:
+        if center_x > frame_width / 2 and center_y < frame_height / 2:
             if self.quadrant_start_time is None:
                 self.quadrant_start_time = time.time()
             else:
