@@ -28,13 +28,13 @@ image_layer2 = "CityBackground.png"
 image_layer3 = "CityMidground.png"
 image_layer4 = "CityForeground.png"
 
-#Speed Variablen City
-speed_layer1 = 400
-speed_layer2 = 300
-speed_layer3 = 200
+#Speed Variablen City       Geschwindigkeitsfactor: größere Zahl -> schneller
+speed_layer1 = 340
+speed_layer2 = 260
+speed_layer3 = 180
 speed_layer4 = 100
 
-#Scale Variablen City
+#Scale Variablen City      Zoomfactor: größere Zahl -> mehr ran gezoomt
 scale_layer1 = 1
 scale_layer2 = 1.45
 scale_layer3 = 1.3
@@ -346,10 +346,10 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         curtains_visible = not face_detector.face_detected
 
         # Adjust the speed and inversion by changing the 'abstand_ebene' values and 'invert_x'/'invert_y' flags                      Geschwindigkeitsfactor: große zahl -> schneller
-        x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), speed_layer1, layer1.get_width(), layer1.get_height(), invert_x=True, invert_y=True)  # Slowest layer
-        x_layer2, y_layer2 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2), speed_layer2, layer2.get_width(), layer2.get_height(), invert_x=True, invert_y=True)  # Faster layer
-        x_layer3, y_layer3 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2), speed_layer3, layer3.get_width(), layer3.get_height(), invert_x=True, invert_y=True)   # Even faster layer
-        x_layer4, y_layer4 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2), speed_layer4, layer4.get_width(), layer4.get_height(), invert_x=True, invert_y=True)  # Fastest layer
+        x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), speed_layer1, layer1.get_width(), layer1.get_height(), invert_x=True, invert_y=True)
+        x_layer2, y_layer2 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2), speed_layer2, layer2.get_width(), layer2.get_height(), invert_x=True, invert_y=True)
+        x_layer3, y_layer3 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2), speed_layer3, layer3.get_width(), layer3.get_height(), invert_x=True, invert_y=True)
+        x_layer4, y_layer4 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2), speed_layer4, layer4.get_width(), layer4.get_height(), invert_x=True, invert_y=True)
         
 
         window.fill(black)
