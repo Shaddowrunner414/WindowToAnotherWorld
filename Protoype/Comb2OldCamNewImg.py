@@ -7,6 +7,40 @@ import mediapipe as mp
 import numpy as np
 import ctypes
 
+image_layer1 = None
+image_layer2 = None
+image_layer3 = None
+image_layer4 = None
+
+speed_layer1 = None
+speed_layer2 = None
+speed_layer3 = None
+speed_layer4 = None
+
+scale_layer1 = None
+scale_layer2 = None
+scale_layer3 = None
+scale_layer4 = None
+
+#Image Variablen City
+image_layer1 = "CitySky.png"
+image_layer2 = "CityBackground.png"
+image_layer3 = "CityMidground.png"
+image_layer4 = "CityForeground.png"
+
+#Speed Variablen City
+speed_layer1 = 400
+speed_layer2 = 300
+speed_layer3 = 200
+speed_layer4 = 100
+
+#Scale Variablen City
+scale_layer1 = 1
+scale_layer2 = 1.45
+scale_layer3 = 1.3
+scale_layer4 = 1.1
+
+
 # AssetManager class to manage the threshold value
 class AssetManager:
     background_removal_threshold = 1.0  # Adjust this value as needed
@@ -225,10 +259,11 @@ def load_and_scale(image_name, scale_factor=1.0):  # Default scale factor increa
     return scaled_image
 
 # Load images
-layer1 = load_and_scale("CitySky.png")
-layer2 = load_and_scale("CityBackground.png", scale_factor=1.45)
-layer3 = load_and_scale("CityMidground.png", scale_factor=1.3)
-layer4 = load_and_scale("CityForeground.png", scale_factor=1.1)
+layer1 = load_and_scale(image_layer1, scale_factor = scale_layer1)
+layer2 = load_and_scale(image_layer2, scale_factor = scale_layer2)
+layer3 = load_and_scale(image_layer3, scale_factor = scale_layer3)
+layer4 = load_and_scale(image_layer4, scale_factor = scale_layer4)
+
 
 layer0_frame = load_and_scale("AIWindow.png")
 layer0_leftCurtain = load_and_scale("leftExtendedCurtainAWithImpressum.png")
@@ -311,10 +346,10 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         curtains_visible = not face_detector.face_detected
 
         # Adjust the speed and inversion by changing the 'abstand_ebene' values and 'invert_x'/'invert_y' flags                      Geschwindigkeitsfactor: große zahl -> schneller
-        x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), 400, layer1.get_width(), layer1.get_height(), invert_x=True, invert_y=True)  # Slowest layer
-        x_layer2, y_layer2 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2), 300, layer2.get_width(), layer2.get_height(), invert_x=True, invert_y=True)  # Faster layer
-        x_layer3, y_layer3 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2), 200, layer3.get_width(), layer3.get_height(), invert_x=True, invert_y=True)   # Even faster layer
-        x_layer4, y_layer4 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2), 100, layer4.get_width(), layer4.get_height(), invert_x=True, invert_y=True)  # Fastest layer
+        x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), speed_layer1, layer1.get_width(), layer1.get_height(), invert_x=True, invert_y=True)  # Slowest layer
+        x_layer2, y_layer2 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2), speed_layer2, layer2.get_width(), layer2.get_height(), invert_x=True, invert_y=True)  # Faster layer
+        x_layer3, y_layer3 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2), speed_layer3, layer3.get_width(), layer3.get_height(), invert_x=True, invert_y=True)   # Even faster layer
+        x_layer4, y_layer4 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2), speed_layer4, layer4.get_width(), layer4.get_height(), invert_x=True, invert_y=True)  # Fastest layer
         
 
         window.fill(black)
