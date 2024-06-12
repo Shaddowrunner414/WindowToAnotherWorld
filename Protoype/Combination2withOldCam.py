@@ -58,6 +58,7 @@ class FaceCenterDetector:
         self.count = 0
         self.last_face_detected_time = None
         self.last_face_lost_time = None
+        self.looks_upper_right = False
 
     def get_face_center(self, frame):
         # Convert the BGR image to RGB.
@@ -94,22 +95,24 @@ class FaceCenterDetector:
         return None
 
     def check_upper_right_quadrant(self, center_x, center_y, frame_width, frame_height):
-        if center_x > frame_width / 2 and center_y < frame_height / 2:
+        if center_x < frame_width / 2 and center_y < frame_height / 2:
             if self.quadrant_start_time is None:
                 self.quadrant_start_time = time.time()
             else:
                 elapsed_time = time.time() - self.quadrant_start_time
                 if elapsed_time >= self.quadrant_duration_threshold and not self.upper_right_triggered:
                     self.upper_right_triggered = True
+                    self.looks_upper_right = True
         else:
             if self.quadrant_start_time is not None and self.upper_right_triggered:
                 # Preserve elapsed time
                 self.quadrant_start_time = time.time() - self.quadrant_duration_threshold  
 
         if self.upper_right_triggered:
-            self.count += 1
-            print("Face detected in the upper right quadrant for at least 4 seconds for {} seconds".format(self.count))
-
+            if self.quadrant_start_time % 1 == 0:
+                self.count += 1
+                print("Face detected in the upper right quadrant for at least 4 seconds for {} seconds".format(self.count))
+             
     def process_frame(self, frame):
         face_center = self.get_face_center(frame)
         current_time = time.time()
@@ -138,9 +141,13 @@ class FaceCenterDetector:
                     self.quadrant_start_time = None
                     self.upper_right_triggered = False
                     self.count = 0
+                    self.looks_upper_right = False
 
     def close(self):
         self.face_mesh.close()
+
+# Balloon movement parameters
+balloon_speed = 5  # Pixels per second
 
 curtains_visible = True
 
@@ -228,7 +235,8 @@ def load_and_scale(image_name, scale_factor=1.0):  # Default scale factor increa
 layer1 = load_and_scale("background.png")
 layer2 = load_and_scale("hill.png", scale_factor=1.1)
 layer3 = load_and_scale("tree.png", scale_factor=1.3)
-layer4 = load_and_scale("fence.png", scale_factor=1.45 )
+layer4 = load_and_scale("fence.png", scale_factor=1.45)
+layer5 = load_and_scale("hot-air-balloon.png", scale_factor=1.2)
 
 layer0_frame = load_and_scale("AIWindow.png")
 layer0_leftCurtain = load_and_scale("leftExtendedCurtainAWithImpressum.png")
@@ -240,14 +248,17 @@ x_layer2, y_layer2 = x_center - layer2.get_width() // 2, y_center - layer2.get_h
 x_layer3, y_layer3 = x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2
 x_layer4, y_layer4 = x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2
 
-# Last known position
+# Initial position for the balloon
+x_balloon_base, y_balloon_base = x_center - layer5.get_width() // 2, y_center - layer5.get_height() // 2
+
+# Initial last known face positions
 lastknown_x, lastknown_y = x_center, y_center
 
 # Monitor distance to viewer in pixels
 monitor_distance = 300.0
 
 # Function to adjust layer positions
-def anpassung_der_ebenen(kopf_x, kopf_y, basisposition, abstand_ebene, layer_width, layer_height, invert_x=False, invert_y=False):
+def anpassung_der_ebenen(kopf_x, kopf_y, basisposition, abstand_ebene, layer_width, layer_height, invert_x=False, invert_y=False, layer_name=None):
     mittelpunkt_x, mittelpunkt_y = width // 2, height // 2
 
     # Calculate the displacement
@@ -270,6 +281,11 @@ def anpassung_der_ebenen(kopf_x, kopf_y, basisposition, abstand_ebene, layer_wid
         neue_position_x = width - layer_width
     if neue_position_y < height - layer_height:
         neue_position_y = height - layer_height
+
+    if layer_name:
+        print(f"{layer_name} - x: {neue_position_x}, y: {neue_position_y}")
+        #neue_position_x += balloon_speed
+        neue_position_y -= balloon_speed
 
     return neue_position_x, neue_position_y
 
@@ -302,26 +318,43 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
             x_face_now, y_face_now = face_center  
         
         # Smooth the face position  
-        x_face_neu = ((x_face_now*3 + lastknown_x * 9) / 10)
-        y_face_neu = ((y_face_now*3 + lastknown_y * 9) / 10)
-
+        x_face_neu = ((x_face_now * 3 + lastknown_x * 9) / 10)
+        y_face_neu = ((y_face_now * 3 + lastknown_y * 9) / 10)
+        print(x_face_neu, y_face_neu)
         
         # Check if the face has been detected for longer than 3 seconds or if no face has been detected for 3 seconds
         face_detector.process_frame(image)
         curtains_visible = not face_detector.face_detected
 
         # Adjust the speed and inversion by changing the 'abstand_ebene' values and 'invert_x'/'invert_y' flags
-        x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), 200, layer1.get_width(), layer1.get_height(), invert_x=True, invert_y=True)  # Slowest layer
-        x_layer2, y_layer2 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2), 600, layer2.get_width(), layer2.get_height(), invert_x=True, invert_y=True)  # Faster layer
-        x_layer4, y_layer4 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2), 1800, layer4.get_width(), layer4.get_height(), invert_x=True, invert_y=True)  # Fastest layer
-        x_layer3, y_layer3 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2), 1400, layer3.get_width(), layer3.get_height(), invert_x=True, invert_y=True)   # Even faster layer
-        
+        x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), 20, layer1.get_width(), layer1.get_height(), invert_x=True, invert_y=True)  # Slowest layer
+        x_layer2, y_layer2 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2), 6, layer2.get_width(), layer2.get_height(), invert_x=True, invert_y=True)  # Faster layer
+        x_layer3, y_layer3 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2), 140, layer3.get_width(), layer3.get_height(), invert_x=True, invert_y=True)   # Even faster layer
+        x_layer4, y_layer4 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2), 180, layer4.get_width(), layer4.get_height(), invert_x=True, invert_y=True)  # Fastest layer
+        x_layer5, y_layer5 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer5.get_width() // 2, y_center - layer5.get_height() // 2), 90, layer5.get_width(), layer5.get_height(), invert_x=True, invert_y=True, layer_name="hot-air-balloon") 
+
+        # # Adjust the balloon position with anpassung_der_ebenen
+        # x_layer5, y_layer5 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_balloon_base, y_balloon_base), 90, layer5.get_width(), layer5.get_height(), invert_x=True, invert_y=True, layer_name="hot-air-balloon") 
+
+        # Move the balloon upwards if the face looks upper right
+        if face_detector.looks_upper_right:
+            balloon_speed += 1
+
+        # # Ensure the balloon stays within the screen bounds
+        # if y_layer5 < 0:
+        #     y_layer5 = 0
+
+        # Update last known face position
+        lastknown_x, lastknown_y = x_face_neu, y_face_neu
 
         window.fill(black)
         window.blit(layer1, (x_layer1, y_layer1))
         window.blit(layer2, (x_layer2, y_layer2)) 
         window.blit(layer3, (x_layer3, y_layer3))
         window.blit(layer4, (x_layer4, y_layer4))
+
+        # Draw the balloon
+        window.blit(layer5, (x_layer5, y_layer5))
 
         window.blit(layer0_frame, (0, 0))
 
