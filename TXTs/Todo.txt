@@ -14,3 +14,9 @@ Neuralnet Evaluierung
 Storyboard bzw. Flowdiagramm erstellen, d.h. einmal den komplette Ablauf durchgehen
     (was soll passieren in den Verschiedenen Zuständen)
     als Flowchart
+
+
+Feedback von Strutz:
+- Vorhang schliest manchmal falsch
+- wenn Gesicht nicht erkannt wird dann soll das Bild nicht zurück springen
+- Impressum soll länger bleiben
