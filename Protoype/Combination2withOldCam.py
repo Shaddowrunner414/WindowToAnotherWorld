@@ -293,6 +293,12 @@ def anpassung_der_ebenen(kopf_x, kopf_y, basisposition, abstand_ebene, layer_wid
 running = True
 face_detector = FaceCenterDetector()
 
+positionLeftCurtainX = 0 
+positionLeftCurtainY = 0 
+positionRightCurtainX = width - layer0_rightCurtain.get_width() 
+positionRightCurtainY = 0 
+curtainsOff = False
+
 with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detection:
     while running:
         color_image_rgb, foreground_image = camera.get_frame()
@@ -368,7 +374,13 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         if curtains_visible:
             window.blit(layer0_leftCurtain, (0, 0))
             window.blit(layer0_rightCurtain, (width - layer0_rightCurtain.get_width(), 0))
-
+        elif curtainsOff == False:
+            window.blit(layer0_leftCurtain, (positionLeftCurtainX, positionLeftCurtainY))
+            window.blit(layer0_rightCurtain, (positionRightCurtainX, positionRightCurtainY)) 
+            positionLeftCurtainX = positionLeftCurtainX - 15
+            positionRightCurtainX = positionRightCurtainX + 15
+            if positionRightCurtainX == width:
+                curtainsOff = True
         pygame.display.flip()
 
 # Clean up resources
