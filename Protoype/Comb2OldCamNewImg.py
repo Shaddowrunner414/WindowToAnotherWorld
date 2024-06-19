@@ -142,7 +142,7 @@ class FaceCenterDetector:
 
         if self.upper_right_triggered:
             self.count += 1
-            print("Face detected in the upper right quadrant for at least 4 seconds for {} seconds".format(self.count))
+            #print("Face detected in the upper right quadrant for at least 4 seconds for {} seconds".format(self.count))
 
     def process_frame(self, frame):
         face_center = self.get_face_center(frame)
@@ -305,7 +305,7 @@ def anpassung_der_ebenen(kopf_x, kopf_y, basisposition, abstand_ebene, layer_wid
         neue_position_x = width - layer_width
     if neue_position_y < height - layer_height:
         neue_position_y = height - layer_height
-
+    #print(neue_position_x, neue_position_y)
     return neue_position_x, neue_position_y
 
 # Game loop
@@ -339,6 +339,7 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         # Smooth the face position  
         x_face_neu = ((x_face_now*3 + lastknown_x * 9) / 10)
         y_face_neu = ((y_face_now*3 + lastknown_y * 9) / 10)
+        print(x_face_neu, y_face_neu)
 
         
         # Check if the face has been detected for longer than 3 seconds or if no face has been detected for 3 seconds
