@@ -150,6 +150,7 @@ class FaceCenterDetector:
 balloon_speed = 5  # Pixels per second
 
 curtains_visible = True
+           
 
 # Initialize Mediapipe Face Detection
 mp_face_detection = mp.solutions.face_detection
@@ -298,6 +299,7 @@ positionLeftCurtainY = 0
 positionRightCurtainX = width - layer0_rightCurtain.get_width() 
 positionRightCurtainY = 0 
 curtainsOff = False
+curtainStart = True
 
 with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detection:
     while running:
@@ -331,7 +333,8 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         # Check if the face has been detected for longer than 3 seconds or if no face has been detected for 3 seconds
         face_detector.process_frame(image)
         curtains_visible = not face_detector.face_detected
-
+        if curtains_visible == False:
+            curtainsOff = False
         # Adjust the speed and inversion by changing the 'abstand_ebene' values and 'invert_x'/'invert_y' flags
         x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), 20, layer1.get_width(), layer1.get_height(), invert_x=True, invert_y=True)  # Slowest layer
         x_layer2, y_layer2 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2), 6, layer2.get_width(), layer2.get_height(), invert_x=True, invert_y=True)  # Faster layer
@@ -372,15 +375,29 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
 
         # Display curtains if face is not detected or not detected long enough
         if curtains_visible:
-            window.blit(layer0_leftCurtain, (0, 0))
-            window.blit(layer0_rightCurtain, (width - layer0_rightCurtain.get_width(), 0))
+            if curtainStart:
+                window.blit(layer0_leftCurtain, (0, 0))
+                window.blit(layer0_rightCurtain, (width - layer0_rightCurtain.get_width(), 0))
+                
+            elif curtainsOff == False:
+                window.blit(layer0_leftCurtain, (positionLeftCurtainX, positionLeftCurtainY))
+                window.blit(layer0_rightCurtain, (positionRightCurtainX, positionRightCurtainY)) 
+                positionLeftCurtainX = positionLeftCurtainX  + 15
+                positionRightCurtainX = positionRightCurtainX - 15
+                if positionRightCurtainX == 0:
+                    curtainsOff = True
+                    curtainStart = True
+
         elif curtainsOff == False:
             window.blit(layer0_leftCurtain, (positionLeftCurtainX, positionLeftCurtainY))
             window.blit(layer0_rightCurtain, (positionRightCurtainX, positionRightCurtainY)) 
             positionLeftCurtainX = positionLeftCurtainX - 15
             positionRightCurtainX = positionRightCurtainX + 15
-            if positionRightCurtainX == width:
+            if positionRightCurtainX == width//2:
                 curtainsOff = True
+                curtainStart = False
+                
+
         pygame.display.flip()
 
 # Clean up resources
