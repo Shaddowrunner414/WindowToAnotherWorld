@@ -28,8 +28,12 @@ class FaceCenterDetector:
         if results.multi_face_landmarks:
             for face_landmarks in results.multi_face_landmarks:
                 center_x = sum(landmark.x for landmark in face_landmarks.landmark) / len(face_landmarks.landmark)
+                # landx = face_landmarks.landmark[0].x
+                # landy = face_landmarks.landmark[0].y
                 center_y = sum(landmark.y for landmark in face_landmarks.landmark) / len(face_landmarks.landmark)
-                return int(center_x * image.shape[1]), int(center_y * image.shape[0])
+                #return int(center_x * image.shape[1]), int(center_y * image.shape[0])
+                # just return the center x/y and multiply it with the resolution in main.py
+                return center_x, center_y
         return None
 
     def check_upper_right_quadrant(self, center_x, center_y, frame_width, frame_height):

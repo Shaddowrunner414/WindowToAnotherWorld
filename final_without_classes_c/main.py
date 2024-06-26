@@ -7,21 +7,12 @@ import numpy as np
 import ctypes
 from camera_manager import CameraManager
 from face_detector import FaceCenterDetector
-from asset_manager import AssetManager
-from image_utils import load_and_scale
+from utils import load_and_scale, get_system_scaling
 from layer_adjustment import anpassung_der_ebenen
-from config import *
+from asset_manager import *
+#from everything_layers import prepare_layers, move_and_draw_layers, curtain_drawer
 
-# Get system scaling for Pygame
-def get_system_scaling():
-    try:
-        user32 = ctypes.windll.user32
-        h_scale = user32.GetDpiForSystem()
-        v_scale = user32.GetDpiForSystem()
-        return h_scale, v_scale
-    except Exception as e:
-        print("Error getting system scaling:", str(e))
-        return None, None
+
 
 pygame.init()
 
@@ -37,6 +28,7 @@ if os.name == 'nt':
 
 
 horizontal_scale, vertical_scale = get_system_scaling()
+
 if horizontal_scale is not None and vertical_scale is not None:
     print("Horizontal system scaling:", horizontal_scale)
     print("Vertical system scaling:", vertical_scale)
@@ -66,6 +58,9 @@ x_layer1, y_layer1 = x_center - layer1.get_width() // 2, y_center - layer1.get_h
 x_layer2, y_layer2 = x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2
 x_layer3, y_layer3 = x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2
 x_layer4, y_layer4 = x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2
+
+# calling the prepare_layers should replace the two blocks above and make the layers available for usage
+# prepare_layers
 
 # Last known position
 lastknown_x, lastknown_y = x_center, y_center
@@ -97,7 +92,10 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
         
         face_center = face_detector.get_face_center(image)
         if face_center is not None:
-            x_face_now, y_face_now = face_center  
+            x_face_now, y_face_now = face_center 
+            # multiply the detected face position (between 0 and 1) with the screen resolution for a greater range of movement 
+            x_face_now = x_face_now * width
+            y_face_now = y_face_now * height
         
         x_face_neu = ((x_face_now*3 + lastknown_x * 9) / 10)
         y_face_neu = ((y_face_now*3 + lastknown_y * 9) / 10)
@@ -118,6 +116,9 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
         window.blit(layer4, (x_layer4, y_layer4))
         window.blit(layer0_frame, (0, 0))
 
+        #calling the move_and_draw_layers should replacce the 2 blocks above
+        #move_and_draw_layers
+
         # Draw a small cross at the face coordinates
         cross_color = (255, 0, 0)  # Red color
         cross_size = 10  # Size of the cross
@@ -128,7 +129,12 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
             window.blit(layer0_leftCurtain, (0, 0))
             window.blit(layer0_rightCurtain, (width - layer0_rightCurtain.get_width(), 0))
 
+        # Calling the curtain_drawer should replace the if statement above
+        #curtain_drawer
+
         pygame.display.flip()
+
+
 
 # Clean up resources
 camera.stop()

@@ -1,5 +1,7 @@
 import pygame
 import os
+import ctypes
+
 
 def load(image_name):
     script_dir = os.path.dirname(__file__)
@@ -30,3 +32,16 @@ def load_and_scale(image_name, scale_factor=1.0):
     print(f"{'W>H' if image_width > image_height else 'W<H'}, {scale_factor if image_width <= image_height else scale_factor2}, {image_width}, {image_width2}, {width}, {image_height}, {image_height2}, {height}, {image_name}")
     print("__")
     return scaled_image
+
+
+
+# Get system scaling for Pygame
+def get_system_scaling():
+    try:
+        user32 = ctypes.windll.user32
+        h_scale = user32.GetDpiForSystem()
+        v_scale = user32.GetDpiForSystem()
+        return h_scale, v_scale
+    except Exception as e:
+        print("Error getting system scaling:", str(e))
+        return None, None
