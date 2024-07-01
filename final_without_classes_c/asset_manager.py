@@ -1,5 +1,8 @@
 import pygame
 
+# Decide if the crosshair should be drawn on the face position. True or false
+draw_face_position_crosshair = True
+
 # Image Variables
 image_layer0_frame = "AIWindow.png"
 image_layer0_left_curtain = "leftExtendedCurtainAWithImpressum.png"
@@ -42,7 +45,7 @@ CROSS_COLOR = (255, 0, 0)  # Red color
 CAMERA_DEVICE_ID = 0
 
 # Window settings
-WINDOW_TITLE = "Parallax Window"
+WINDOW_TITLE = "Window to another world"
 
 # When using the Realsense Camera, everything that's farther away from the camera then this variable (in meters) get's cut away
 background_removal_threshold = 1.0
