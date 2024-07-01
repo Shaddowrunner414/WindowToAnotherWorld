@@ -23,10 +23,10 @@ scale_layer3 = None
 scale_layer4 = None
 
 #Image Variablen City
-image_layer1 = "CitySky.png"
-image_layer2 = "CityBackground.png"
-image_layer3 = "CityMidground.png"
-image_layer4 = "CityForeground.png"
+image_layer1 = "HimmelF.png"#"CitySky.png"
+image_layer2 = "HintergrundF.png"#"CityBackground.png"
+image_layer3 = "HausF.png"#"CityMidground.png"
+image_layer4 = "TerasseFTerasse.png"#"CityForeground.png"
 
 #Speed Variablen City       Geschwindigkeitsfactor: größere Zahl -> schneller
 speed_layer1 = 340
@@ -35,10 +35,10 @@ speed_layer3 = 180
 speed_layer4 = 100
 
 #Scale Variablen City      Zoomfactor: größere Zahl -> mehr ran gezoomt
-scale_layer1 = 1
-scale_layer2 = 1.45
-scale_layer3 = 1.3
-scale_layer4 = 1.1
+scale_layer1 = 1.2#1
+scale_layer2 = 1.2#1.45
+scale_layer3 = 1.2#1.3
+scale_layer4 = 1.2#1.1
 
 
 # AssetManager class to manage the threshold value
