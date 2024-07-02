@@ -388,6 +388,7 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
                     curtainsOff = True
                     curtainStart = True
 
+
         elif curtainsOff == False:
             window.blit(layer0_leftCurtain, (positionLeftCurtainX, positionLeftCurtainY))
             window.blit(layer0_rightCurtain, (positionRightCurtainX, positionRightCurtainY)) 
