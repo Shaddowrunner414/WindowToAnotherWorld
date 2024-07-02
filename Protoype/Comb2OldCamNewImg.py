@@ -6,39 +6,125 @@ import os
 import mediapipe as mp
 import numpy as np
 import ctypes
+import keyboard
 
 image_layer1 = None
 image_layer2 = None
 image_layer3 = None
 image_layer4 = None
+image_layer5 = None
+image_layer6 = None
 
 speed_layer1 = None
 speed_layer2 = None
 speed_layer3 = None
 speed_layer4 = None
+speed_layer5 = None
+speed_layer6 = None
 
 scale_layer1 = None
 scale_layer2 = None
 scale_layer3 = None
 scale_layer4 = None
+scale_layer5 = None
+scale_layer6 = None
+
+
+# Initialize LevelSelected to True (or any other suitable initial state)
+LevelSelected = True
+
+def on_space_bar_press(e):
+    global LevelSelected 
+    
+    if e.name == 'space':
+        if LevelSelected:
+            print("City -> Garden")
+            #cityGarden()
+
+            global image_layer1, image_layer2, image_layer3, image_layer4, image_layer5, image_layer6
+            global speed_layer1, speed_layer2, speed_layer3, speed_layer4, speed_layer5, speed_layer6
+            global scale_layer1, scale_layer2, scale_layer3, scale_layer4, scale_layer5, scale_layer6
+
+            image_layer1 = "HimmelF.png"
+            image_layer2 = "HintergrundF.png"
+            image_layer3 = "HausF.png"
+            image_layer4 = "TerasseFTerasse.png"
+            image_layer5 = "VordergrundF.png"
+            image_layer6 = "PflanzenVorneF.png"
+
+            speed_layer1 = 800
+            speed_layer2 = 700
+            speed_layer3 = 560
+            speed_layer4 = 480
+            speed_layer5 = 380
+            speed_layer6 = 300
+
+            scale_layer1 = 1.2
+            scale_layer2 = 1.2
+            scale_layer3 = 1.2
+            scale_layer4 = 1.2
+            scale_layer5 = 1.2
+            scale_layer6 = 1.2
+
+            LevelSelected = False
+            time.sleep(1)
+        else:
+            print("Garden -> City")
+
+            image_layer1 = "CitySky.png"
+            image_layer2 = "CitySky.png"
+            image_layer3 = "CitySky.png"
+            image_layer4 = "CityBackground.png"
+            image_layer5 = "CityMidground.png"
+            image_layer6 = "CityForeground.png"
+
+            speed_layer1 = 0
+            speed_layer2 = 0
+            speed_layer3 = 0
+            speed_layer4 = 260
+            speed_layer5 = 180
+            speed_layer6 = 100
+
+            scale_layer1 = 1
+            scale_layer2 = 1
+            scale_layer3 = 1
+            scale_layer4 = 1.45
+            scale_layer5 = 1.3
+            scale_layer6 = 1.1
+
+            LevelSelected = True
+            time.sleep(1)
+      
+# Register the function to be called on space bar press
+keyboard.on_press(on_space_bar_press)
+
+# Wait for the 'esc' key to exit the program
+#keyboard.wait('esc')
+
 
 #Image Variablen City
 image_layer1 = "CitySky.png"
-image_layer2 = "CityBackground.png"
-image_layer3 = "CityMidground.png"
-image_layer4 = "CityForeground.png"
+image_layer2 = "CitySky.png"
+image_layer3 = "CitySky.png"
+image_layer4 = "CityBackground.png"
+image_layer5 = "CityMidground.png"
+image_layer6 = "CityForeground.png"
 
 #Speed Variablen City       Geschwindigkeitsfactor: größere Zahl -> schneller
-speed_layer1 = 340
-speed_layer2 = 260
-speed_layer3 = 180
-speed_layer4 = 100
+speed_layer1 = 0
+speed_layer2 = 0
+speed_layer3 = 0
+speed_layer4 = 260
+speed_layer5 = 180
+speed_layer6 = 100
 
 #Scale Variablen City      Zoomfactor: größere Zahl -> mehr ran gezoomt
 scale_layer1 = 1
-scale_layer2 = 1.45
-scale_layer3 = 1.3
-scale_layer4 = 1.1
+scale_layer2 = 1
+scale_layer3 = 1
+scale_layer4 = 1.45
+scale_layer5 = 1.3
+scale_layer6 = 1.1
 
 
 # AssetManager class to manage the threshold value
@@ -263,6 +349,8 @@ layer1 = load_and_scale(image_layer1, scale_factor = scale_layer1)
 layer2 = load_and_scale(image_layer2, scale_factor = scale_layer2)
 layer3 = load_and_scale(image_layer3, scale_factor = scale_layer3)
 layer4 = load_and_scale(image_layer4, scale_factor = scale_layer4)
+layer5 = load_and_scale(image_layer5, scale_factor = scale_layer5)
+layer6 = load_and_scale(image_layer6, scale_factor = scale_layer6)
 
 
 layer0_frame = load_and_scale("AIWindow.png")
@@ -274,6 +362,8 @@ x_layer1, y_layer1 = x_center - layer1.get_width() // 2, y_center - layer1.get_h
 x_layer2, y_layer2 = x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2
 x_layer3, y_layer3 = x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2
 x_layer4, y_layer4 = x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2
+x_layer5, y_layer5 = x_center - layer5.get_width() // 2, y_center - layer5.get_height() // 2
+x_layer6, y_layer6 = x_center - layer6.get_width() // 2, y_center - layer6.get_height() // 2
 
 # Last known position
 lastknown_x, lastknown_y = x_center, y_center
@@ -329,7 +419,7 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = face_detection.process(image)
 
-        x_face_now, y_face_now = x_center, y_center
+        #x_face_now, y_face_now = x_center, y_center
         
         # Process the frame to check face detection
         face_center = face_detector.get_face_center(image)
@@ -351,13 +441,17 @@ with mp_face_detection.FaceDetection(min_detection_confidence=0.5) as face_detec
         x_layer2, y_layer2 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2), speed_layer2, layer2.get_width(), layer2.get_height(), invert_x=True, invert_y=True)
         x_layer3, y_layer3 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2), speed_layer3, layer3.get_width(), layer3.get_height(), invert_x=True, invert_y=True)
         x_layer4, y_layer4 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2), speed_layer4, layer4.get_width(), layer4.get_height(), invert_x=True, invert_y=True)
-        
+        x_layer5, y_layer5 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer5.get_width() // 2, y_center - layer5.get_height() // 2), speed_layer5, layer5.get_width(), layer5.get_height(), invert_x=True, invert_y=True)
+        x_layer6, y_layer6 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer6.get_width() // 2, y_center - layer6.get_height() // 2), speed_layer6, layer6.get_width(), layer6.get_height(), invert_x=True, invert_y=True)
+
 
         window.fill(black)
         window.blit(layer1, (x_layer1, y_layer1))
         window.blit(layer2, (x_layer2, y_layer2)) 
         window.blit(layer3, (x_layer3, y_layer3))
         window.blit(layer4, (x_layer4, y_layer4))
+        window.blit(layer5, (x_layer5, y_layer5))
+        window.blit(layer6, (x_layer6, y_layer6))
 
         window.blit(layer0_frame, (0, 0))
 
