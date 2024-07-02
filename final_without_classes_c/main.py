@@ -105,8 +105,8 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
             x_face_now, y_face_now = x_center, y_center
         
         # Smooth the face movement
-        x_face_neu = ((x_face_now*3 + lastknown_x * 9) / 10)
-        y_face_neu = ((y_face_now*3 + lastknown_y * 9) / 10)
+        y_face_neu = ((y_face_now*3 + lastknown_y * 9) / 12)
+        x_face_neu = ((x_face_now*3 + lastknown_x * 9) / 12)
         print(x_face_neu, y_face_neu)
 
         # Process the frame to detect if a face is present detected at all to control the curtains
@@ -133,8 +133,10 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
         if draw_face_position_crosshair == True:
             cross_color = (255, 0, 0)  # Red color
             cross_size = 10  # Size of the cross
-            pygame.draw.line(window, cross_color, (x_face_neu - cross_size, y_face_neu), (x_face_neu + cross_size, y_face_neu), 2)
-            pygame.draw.line(window, cross_color, (x_face_neu, y_face_neu - cross_size), (x_face_neu, y_face_neu + cross_size), 2)
+            # Calculate the reversed x-position for the crosshair
+            x_crosshair = width - x_face_neu
+            pygame.draw.line(window, cross_color, (x_crosshair - cross_size, y_face_neu), (x_crosshair + cross_size, y_face_neu), 2)
+            pygame.draw.line(window, cross_color, (x_crosshair, y_face_neu - cross_size), (x_crosshair, y_face_neu + cross_size), 2)
 
         # Draw the curtains if they should be visible
         if curtains_visible:
