@@ -65,6 +65,12 @@ def load_and_scale(image_name, scale_factor=1.0):
     return scaled_image
 
 
+# adjust the loaded image to have it stretched to the screen resolution
+def load_and_scale_fullscreen(image_name):
+    image = load(image_name)
+    return pygame.transform.scale(image, (width, height))
+
+
 
 # Attempt to get the system DPI scaling on Windows
 def get_system_scaling():

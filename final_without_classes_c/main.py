@@ -7,7 +7,7 @@ import numpy as np
 import ctypes
 from camera_manager import CameraManager
 from face_detector import FaceCenterDetector
-from utils import load_and_scale, get_system_scaling
+from utils import load_and_scale, get_system_scaling, load_and_scale_fullscreen
 from layer_adjustment import anpassung_der_ebenen
 from asset_manager import *
 
@@ -39,9 +39,12 @@ layer1 = load_and_scale(image_layer1, scale_factor=scale_layer1)
 layer2 = load_and_scale(image_layer2, scale_factor=scale_layer2)
 layer3 = load_and_scale(image_layer3, scale_factor=scale_layer3)
 layer4 = load_and_scale(image_layer4, scale_factor=scale_layer4)
-layer0_frame = load_and_scale(image_layer0_frame, scale_layer0)
-layer0_leftCurtain = load_and_scale(image_layer0_left_curtain, scale_layer0)
-layer0_rightCurtain = load_and_scale(image_layer0_right_curtain, scale_layer0)
+layer0_frame = load_and_scale_fullscreen(image_layer0_frame)
+layer0_leftCurtain = load_and_scale_fullscreen(image_layer0_left_curtain)
+layer0_rightCurtain = load_and_scale_fullscreen(image_layer0_right_curtain)
+# layer0_frame = load_and_scale(image_layer0_frame, scale_layer0)
+# layer0_leftCurtain = load_and_scale(image_layer0_left_curtain, scale_layer0)
+# layer0_rightCurtain = load_and_scale(image_layer0_right_curtain, scale_layer0)
 
 # Initial positions (centered)
 x_layer1, y_layer1 = x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2
