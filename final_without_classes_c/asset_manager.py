@@ -1,7 +1,7 @@
 import pygame
 
 # Decide if the crosshair should be drawn on the face position. True or false
-draw_face_position_crosshair = True
+draw_face_position_crosshair = False
 
 # Adjust this value to change the speed of the curtains
 curtain_speed = 10  

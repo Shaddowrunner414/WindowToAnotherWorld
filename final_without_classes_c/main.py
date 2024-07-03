@@ -28,7 +28,7 @@ if horizontal_scale is not None and vertical_scale is not None:
      print("Vertical system scaling:", vertical_scale)
 
 # Print screen dimensions for debugging
-print("Screen resolution width: ", width, "Screen resolution height: ",  height)
+#print("Screen resolution width: ", width, "Screen resolution height: ",  height)
 
 # Define a pygame window and starting point
 window = pygame.display.set_mode((width, height), pygame.SCALED)
@@ -97,7 +97,7 @@ def switch_scene():
     global speed_layer1, speed_layer2, speed_layer3, speed_layer4, speed_layer5, speed_layer6, speed_layer7
     global scale_layer1, scale_layer2, scale_layer3, scale_layer4, scale_layer5, scale_layer6, scale_layer7
 
-    print("Inside switch_scene function")  # Debug print
+    #print("Inside switch_scene function")  # Debug print
 
     if CurtainsClosed:
         if LevelSelected:
@@ -109,7 +109,7 @@ def switch_scene():
             image_layer4 = "TerasseFTerasse.png"
             image_layer5 = "VordergrundF.png"
             image_layer6 = "PflanzenVorneF.png"
-            image_layer7 = "hot-air-balloon.png"
+            image_layer7 = "Bee.png"
 
             speed_layer1 = 800
             speed_layer2 = 700
@@ -119,7 +119,7 @@ def switch_scene():
             speed_layer6 = 300
 
             scale_layer1 = 1.2
-            scale_layer2 = 1.2
+            scale_layer2 = 1.25
             scale_layer3 = 1.2
             scale_layer4 = 1.2
             scale_layer5 = 1.2
@@ -155,7 +155,7 @@ def switch_scene():
 
         # Reload Images
         load_layers()
-        print("Layers reloaded")  # Debug print
+        #print("Layers reloaded")  # Debug print
         
         # Reset CurtainsClosed flag after switching
         CurtainsClosed = False
@@ -206,7 +206,7 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
         # Smooth the face movement
         y_face_neu = ((y_face_now*3 + lastknown_y * 9) / 12)
         x_face_neu = ((x_face_now*3 + lastknown_x * 9) / 12)
-        print(x_face_neu, y_face_neu)
+        #print(x_face_neu, y_face_neu)
 
         # Process the frame to detect if a face is present to control the curtains
         face_detector.process_frame(image)
@@ -217,28 +217,28 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
             curtain_close_counter += 1
             if curtain_close_counter > 1:
                 curtain_close_counter = 0
-            print(f"Curtains closed. Counter: {curtain_close_counter}")
+            #print(f"Curtains closed. Counter: {curtain_close_counter}")
 
         last_curtain_state = curtains_visible
 
         # Update target positions for curtains
 
-        print(f"Curtains visible: {curtains_visible}")  # Debug print
+        #print(f"Curtains visible: {curtains_visible}")  # Debug print
         if curtains_visible:
             target_left_curtain_x = 0
             target_right_curtain_x = width - layer0_rightCurtain.get_width()
-            print(f"Left curtain: {left_curtain_x}/{target_left_curtain_x}, Right curtain: {right_curtain_x}/{target_right_curtain_x}")  # Debug print
+            #print(f"Left curtain: {left_curtain_x}/{target_left_curtain_x}, Right curtain: {right_curtain_x}/{target_right_curtain_x}")  # Debug print
             if left_curtain_x == target_left_curtain_x and right_curtain_x == target_right_curtain_x:
-                print("Curtains fully closed")  # Debug print
+                #print("Curtains fully closed")  # Debug print
                 if not CurtainsClosed:
-                    print("Attempting to switch scene")  # Debug print
+                    #print("Attempting to switch scene")  # Debug print
                     CurtainsClosed = True
                     switch_scene()
         else:
             target_left_curtain_x = -layer0_leftCurtain.get_width()
             target_right_curtain_x = width
             if CurtainsClosed:
-                print("Curtains opening, resetting CurtainsClosed")  # Debug print
+                #print("Curtains opening, resetting CurtainsClosed")  # Debug print
                 CurtainsClosed = False
 
         # Move curtains towards target positions
@@ -252,7 +252,7 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
         elif right_curtain_x > target_right_curtain_x:
             right_curtain_x = max(right_curtain_x - curtain_speed, target_right_curtain_x)
 
-        print(f"CurtainsClosed: {CurtainsClosed}")  # Debug print
+        #print(f"CurtainsClosed: {CurtainsClosed}")  # Debug print
 
         # Check if the curtains are fully closed
         # if curtains_visible:
@@ -264,7 +264,7 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
         #     CurtainsClosed = False
 
         # Debug output for CurtainsClosed
-        print("CurtainsClosed:", CurtainsClosed)
+        #print("CurtainsClosed:", CurtainsClosed)
 
         # Adjust the layer positions based on the face position
         x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), speed_layer1, layer1.get_width(), layer1.get_height())
