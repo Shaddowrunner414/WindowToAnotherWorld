@@ -1,6 +1,7 @@
 import time
 import cv2
 import mediapipe as mp
+from layer_adjustment import ballon_speed_up
 
 class FaceCenterDetector:
     # Initialize the FaceCenterDetector
@@ -67,6 +68,7 @@ class FaceCenterDetector:
             else:
                 # Check how long the face has been in the quadrant
                 elapsed_time = time.time() - self.quadrant_start_time
+                ballon_speed_up()
                 if elapsed_time >= self.quadrant_duration_threshold and not self.upper_right_triggered:
                     # Trigger the action if the threshold is reached
                     self.upper_right_triggered = True
@@ -100,7 +102,7 @@ class FaceCenterDetector:
 
                     # Start timing when a face is detected
                     self.last_face_detected_time = current_time
-                elif current_time - self.last_face_detected_time >= 2:
+                elif current_time - self.last_face_detected_time >= 1:
                     # If a face as been consistently detected for 2 seonds open the curtains
                     print("curtains open")
                     self.face_detected = True
@@ -111,7 +113,7 @@ class FaceCenterDetector:
 
                     # Start timing when the face is lost
                     self.last_face_lost_time = current_time
-                elif current_time - self.last_face_lost_time >= 2:
+                elif current_time - self.last_face_lost_time >= 1:
                     
                     # If no face has been detected for 2 seconds, close the curtains
                     print("curtains closed")

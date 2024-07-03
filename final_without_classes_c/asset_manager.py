@@ -3,31 +3,42 @@ import pygame
 # Decide if the crosshair should be drawn on the face position. True or false
 draw_face_position_crosshair = True
 
+# Adjust this value to change the speed of the curtains
+curtain_speed = 10  
+
 # Image Variables
 image_layer0_frame = "AIWindow.png"
 image_layer0_left_curtain = "leftExtendedCurtainAWithImpressum.png"
 image_layer0_right_curtain = "rightExtendedCurtainA.png"
 image_layer1 = "CitySky.png"
-image_layer2 = "CityBackground.png"
-image_layer3 = "CityMidground.png"
-image_layer4 = "CityForeground.png"
+image_layer2 = "CitySky.png"
+image_layer3 = "CitySky.png"
+image_layer4 = "CityBackground.png"
+image_layer5 = "CityMidground.png"
+image_layer6 = "CityForeground.png"
+image_layer7 = "hot-air-balloon.png"
 
 # Individual Layer Speed Variables (Geschwindigkeitsfactor: größere Zahl -> schneller)
-speed_layer1 = 340
-speed_layer2 = 260
-speed_layer3 = 180
-speed_layer4 = 100
+speed_layer1 = 0
+speed_layer2 = 0
+speed_layer3 = 0
+speed_layer4 = 260
+speed_layer5 = 180
+speed_layer6 = 100
+speed_layer7 = 120
 
 # Genral Speed Modifier
 # Increase this value for less sensitive movement, decrease for more sensitive
-general_speed_modifier = 400
+general_speed_modifier = 1000
 
 # Scale Variables (Zoomfactor: größere Zahl -> mehr ran gezoomt)
-scale_layer0 = 1
 scale_layer1 = 1
-scale_layer2 = 1.45
-scale_layer3 = 1.3
-scale_layer4 = 1.1
+scale_layer2 = 1
+scale_layer3 = 1
+scale_layer4 = 1.45
+scale_layer5 = 1.3
+scale_layer6 = 1.1
+scale_layer7 = 1.2
 
 # Monitor distance to viewer in pixels
 monitor_distance = 300.0
