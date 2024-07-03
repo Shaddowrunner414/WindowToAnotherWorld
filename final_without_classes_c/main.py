@@ -1,10 +1,7 @@
 import pygame
 import sys
-import os
 import cv2
 import mediapipe as mp
-import numpy as np
-import ctypes
 import time
 from camera_manager import CameraManager
 from face_detector import FaceCenterDetector
@@ -204,7 +201,7 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
             x_face_now, y_face_now = x_center, y_center
         
         # Smooth the face movement
-        y_face_neu = ((y_face_now*3 + lastknown_y * 9) / 12)
+        y_face_neu = height - ((y_face_now*3 + lastknown_y * 9) / 12)
         x_face_neu = ((x_face_now*3 + lastknown_x * 9) / 12)
         #print(x_face_neu, y_face_neu)
 
