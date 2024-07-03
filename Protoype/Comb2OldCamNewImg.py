@@ -32,68 +32,78 @@ scale_layer6 = None
 
 # Initialize LevelSelected to True (or any other suitable initial state)
 LevelSelected = True
+wait = 0
 
 def on_space_bar_press(e):
-    global LevelSelected 
+    global LevelSelected, wait, current_time
     
     if e.name == 'space':
-        if LevelSelected:
-            print("City -> Garden")
-            #cityGarden()
+        current_time = time.time()
+        if current_time - wait >= 1:
+            if LevelSelected:
+                print("City -> Garden")
+                #cityGarden()
 
-            global image_layer1, image_layer2, image_layer3, image_layer4, image_layer5, image_layer6
-            global speed_layer1, speed_layer2, speed_layer3, speed_layer4, speed_layer5, speed_layer6
-            global scale_layer1, scale_layer2, scale_layer3, scale_layer4, scale_layer5, scale_layer6
+                global image_layer1, image_layer2, image_layer3, image_layer4, image_layer5, image_layer6
+                global speed_layer1, speed_layer2, speed_layer3, speed_layer4, speed_layer5, speed_layer6
+                global scale_layer1, scale_layer2, scale_layer3, scale_layer4, scale_layer5, scale_layer6
+                global layer1, layer2, layer3, layer4, layer5, layer6
 
-            image_layer1 = "HimmelF.png"
-            image_layer2 = "HintergrundF.png"
-            image_layer3 = "HausF.png"
-            image_layer4 = "TerasseFTerasse.png"
-            image_layer5 = "VordergrundF.png"
-            image_layer6 = "PflanzenVorneF.png"
+                image_layer1 = "HimmelF.png"
+                image_layer2 = "HintergrundF.png"
+                image_layer3 = "HausF.png"
+                image_layer4 = "TerasseFTerasse.png"
+                image_layer5 = "VordergrundF.png"
+                image_layer6 = "PflanzenVorneF.png"
 
-            speed_layer1 = 800
-            speed_layer2 = 700
-            speed_layer3 = 560
-            speed_layer4 = 480
-            speed_layer5 = 380
-            speed_layer6 = 300
+                speed_layer1 = 800
+                speed_layer2 = 700
+                speed_layer3 = 560
+                speed_layer4 = 480
+                speed_layer5 = 380
+                speed_layer6 = 300
 
-            scale_layer1 = 1.2
-            scale_layer2 = 1.2
-            scale_layer3 = 1.2
-            scale_layer4 = 1.2
-            scale_layer5 = 1.2
-            scale_layer6 = 1.2
+                scale_layer1 = 1.2
+                scale_layer2 = 1.2
+                scale_layer3 = 1.2
+                scale_layer4 = 1.2
+                scale_layer5 = 1.2
+                scale_layer6 = 1.2
 
-            LevelSelected = False
-            time.sleep(1)
-        else:
-            print("Garden -> City")
+                LevelSelected = False
+            else:
+                print("Garden -> City")
 
-            image_layer1 = "CitySky.png"
-            image_layer2 = "CitySky.png"
-            image_layer3 = "CitySky.png"
-            image_layer4 = "CityBackground.png"
-            image_layer5 = "CityMidground.png"
-            image_layer6 = "CityForeground.png"
+                image_layer1 = "CitySky.png"
+                image_layer2 = "CitySky.png"
+                image_layer3 = "CitySky.png"
+                image_layer4 = "CityBackground.png"
+                image_layer5 = "CityMidground.png"
+                image_layer6 = "CityForeground.png"
 
-            speed_layer1 = 0
-            speed_layer2 = 0
-            speed_layer3 = 0
-            speed_layer4 = 260
-            speed_layer5 = 180
-            speed_layer6 = 100
+                speed_layer1 = 0
+                speed_layer2 = 0
+                speed_layer3 = 0
+                speed_layer4 = 260
+                speed_layer5 = 180
+                speed_layer6 = 100
 
-            scale_layer1 = 1
-            scale_layer2 = 1
-            scale_layer3 = 1
-            scale_layer4 = 1.45
-            scale_layer5 = 1.3
-            scale_layer6 = 1.1
+                scale_layer1 = 1
+                scale_layer2 = 1
+                scale_layer3 = 1
+                scale_layer4 = 1.45
+                scale_layer5 = 1.3
+                scale_layer6 = 1.1
 
-            LevelSelected = True
-            time.sleep(1)
+                LevelSelected = True
+            wait = current_time
+
+    layer1 = load_and_scale(image_layer1, scale_factor = scale_layer1)
+    layer2 = load_and_scale(image_layer2, scale_factor = scale_layer2)
+    layer3 = load_and_scale(image_layer3, scale_factor = scale_layer3)
+    layer4 = load_and_scale(image_layer4, scale_factor = scale_layer4)
+    layer5 = load_and_scale(image_layer5, scale_factor = scale_layer5)
+    layer6 = load_and_scale(image_layer6, scale_factor = scale_layer6)
       
 # Register the function to be called on space bar press
 keyboard.on_press(on_space_bar_press)
