@@ -22,12 +22,12 @@ camera.start()
 # Get system scaling factors for both horizontal and vertical directions
 horizontal_scale, vertical_scale = get_system_scaling()
 
-# Debug output of the scaling from the step before
+# # Debug output of the scaling from the step before
 if horizontal_scale is not None and vertical_scale is not None:
-    print("Horizontal system scaling:", horizontal_scale)
-    print("Vertical system scaling:", vertical_scale)
+     print("Horizontal system scaling:", horizontal_scale)
+     print("Vertical system scaling:", vertical_scale)
 
-# Print screen dimensions for debugging
+# # Print screen dimensions for debugging
 print("Screen resolution width: ", width, "Screen resolution height: ",  height)
 
 # Define a pygame window and starting point
@@ -60,6 +60,7 @@ x_face_now, y_face_now = x_center, y_center
 running = True
 face_detector = FaceCenterDetector()
 curtains_visible = True
+CurtainsClosed = False  # New variable to track if curtains are closed
 
 # New variables for curtain animation
 curtain_speed = 10  # Adjust this value to change the speed of the curtains
@@ -133,6 +134,15 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
             right_curtain_x = min(right_curtain_x + curtain_speed, target_right_curtain_x)
         elif right_curtain_x > target_right_curtain_x:
             right_curtain_x = max(right_curtain_x - curtain_speed, target_right_curtain_x)
+
+        # Check if the curtains are fully closed
+        if left_curtain_x == target_left_curtain_x and right_curtain_x == target_right_curtain_x:
+            CurtainsClosed = True
+        else:
+            CurtainsClosed = False
+
+        # Debug output for CurtainsClosed
+        print("CurtainsClosed:", CurtainsClosed)
 
         # Adjust the layer positions based on the face position
         x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), speed_layer1, layer1.get_width(), layer1.get_height())
