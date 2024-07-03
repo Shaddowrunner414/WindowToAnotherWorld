@@ -8,33 +8,13 @@ import numpy as np
 import ctypes
 import keyboard
 
-image_layer1 = None
-image_layer2 = None
-image_layer3 = None
-image_layer4 = None
-image_layer5 = None
-image_layer6 = None
-
-speed_layer1 = None
-speed_layer2 = None
-speed_layer3 = None
-speed_layer4 = None
-speed_layer5 = None
-speed_layer6 = None
-
-scale_layer1 = None
-scale_layer2 = None
-scale_layer3 = None
-scale_layer4 = None
-scale_layer5 = None
-scale_layer6 = None
-
-
 # Initialize LevelSelected to True (or any other suitable initial state)
 LevelSelected = True
 wait = 0
 
+#Szenenänderung
 def on_space_bar_press(e):
+    #Zeitverzögerung
     global LevelSelected, wait, current_time
     
     if e.name == 'space':
@@ -48,7 +28,7 @@ def on_space_bar_press(e):
                 global speed_layer1, speed_layer2, speed_layer3, speed_layer4, speed_layer5, speed_layer6
                 global scale_layer1, scale_layer2, scale_layer3, scale_layer4, scale_layer5, scale_layer6
                 global layer1, layer2, layer3, layer4, layer5, layer6
-
+                #Garten Szene
                 image_layer1 = "HimmelF.png"
                 image_layer2 = "HintergrundF.png"
                 image_layer3 = "HausF.png"
@@ -73,7 +53,7 @@ def on_space_bar_press(e):
                 LevelSelected = False
             else:
                 print("Garden -> City")
-
+                #City Szene
                 image_layer1 = "CitySky.png"
                 image_layer2 = "CitySky.png"
                 image_layer3 = "CitySky.png"
@@ -97,7 +77,7 @@ def on_space_bar_press(e):
 
                 LevelSelected = True
             wait = current_time
-
+    #Reload Images
     layer1 = load_and_scale(image_layer1, scale_factor = scale_layer1)
     layer2 = load_and_scale(image_layer2, scale_factor = scale_layer2)
     layer3 = load_and_scale(image_layer3, scale_factor = scale_layer3)
