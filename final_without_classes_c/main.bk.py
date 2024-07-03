@@ -42,6 +42,9 @@ layer4 = load_and_scale(image_layer4, scale_factor=scale_layer4)
 layer0_frame = load_and_scale_fullscreen(image_layer0_frame)
 layer0_leftCurtain = load_and_scale_fullscreen(image_layer0_left_curtain)
 layer0_rightCurtain = load_and_scale_fullscreen(image_layer0_right_curtain)
+# layer0_frame = load_and_scale(image_layer0_frame, scale_layer0)
+# layer0_leftCurtain = load_and_scale(image_layer0_left_curtain, scale_layer0)
+# layer0_rightCurtain = load_and_scale(image_layer0_right_curtain, scale_layer0)
 
 # Initial positions (centered)
 x_layer1, y_layer1 = x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2
@@ -61,16 +64,11 @@ running = True
 face_detector = FaceCenterDetector()
 curtains_visible = True
 
-# New variables for curtain animation
-curtain_speed = 10  # Adjust this value to change the speed of the curtains
-left_curtain_x = 0
-right_curtain_x = width - layer0_rightCurtain.get_width()
-target_left_curtain_x = 0
-target_right_curtain_x = width - layer0_rightCurtain.get_width()
 
 # Game loop
 with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as face_detection:
     while running:
+
         # Get a new frame from the camera
         color_image_rgb, foreground_image = camera.get_frame()
         if color_image_rgb is None or foreground_image is None:
@@ -89,7 +87,7 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         results = face_detection.process(image)
         
-        # Try to detect a face and retrieve the coordinates of the center of the face
+        # Try to detect a face and retrieve the the coordinates of the center of the face
         face_center = face_detector.get_face_center(image)
         if face_center is not None:
             x_face_now, y_face_now = face_center 
@@ -114,25 +112,6 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
         # Process the frame to detect if a face is present detected at all to control the curtains
         face_detector.process_frame(image)
         curtains_visible = not face_detector.face_detected
-
-        # Update target positions for curtains
-        if curtains_visible:
-            target_left_curtain_x = 0
-            target_right_curtain_x = width - layer0_rightCurtain.get_width()
-        else:
-            target_left_curtain_x = -layer0_leftCurtain.get_width()
-            target_right_curtain_x = width
-
-        # Move curtains towards target positions
-        if left_curtain_x < target_left_curtain_x:
-            left_curtain_x = min(left_curtain_x + curtain_speed, target_left_curtain_x)
-        elif left_curtain_x > target_left_curtain_x:
-            left_curtain_x = max(left_curtain_x - curtain_speed, target_left_curtain_x)
-
-        if right_curtain_x < target_right_curtain_x:
-            right_curtain_x = min(right_curtain_x + curtain_speed, target_right_curtain_x)
-        elif right_curtain_x > target_right_curtain_x:
-            right_curtain_x = max(right_curtain_x - curtain_speed, target_right_curtain_x)
 
         # Adjust the layer positions based on the face position
         x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), speed_layer1, layer1.get_width(), layer1.get_height())
@@ -159,12 +138,15 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
             pygame.draw.line(window, cross_color, (x_crosshair - cross_size, y_face_neu), (x_crosshair + cross_size, y_face_neu), 2)
             pygame.draw.line(window, cross_color, (x_crosshair, y_face_neu - cross_size), (x_crosshair, y_face_neu + cross_size), 2)
 
-        # Draw the curtains at their current positions
-        window.blit(layer0_leftCurtain, (left_curtain_x, 0))
-        window.blit(layer0_rightCurtain, (right_curtain_x, 0))
+        # Draw the curtains if they should be visible
+        if curtains_visible:
+            window.blit(layer0_leftCurtain, (0, 0))
+            window.blit(layer0_rightCurtain, (width - layer0_rightCurtain.get_width(), 0))
 
         # Update the display
         pygame.display.flip()
+
+
 
 # Clean up resources
 camera.stop()
