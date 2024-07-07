@@ -58,10 +58,10 @@ def load_and_scale(image_name, scale_factor=1.0):
     image_height2 = scaled_image.get_height()
     
     # Print debugging information
-    print(f"{'W>H' if image_width > image_height else 'W<H'}, "
-          f"{scale_factor_portrait if image_width <= image_height else scale_factor_landsacpe}, "
-          f"{image_width}, {image_width2}, {width}, "
-          f"{image_height}, {image_height2}, {height}, {image_name}")
+    # print(f"{'W>H' if image_width > image_height else 'W<H'}, "
+    #       f"{scale_factor_portrait if image_width <= image_height else scale_factor_landsacpe}, "
+    #       f"{image_width}, {image_width2}, {width}, "
+    #       f"{image_height}, {image_height2}, {height}, {image_name}")
     return scaled_image
 
 
@@ -87,5 +87,5 @@ def get_system_scaling():
         return h_scale, v_scale
     except Exception as e:
         # If any error occurs (e.g., not on Windows), print the error and return None values
-        print("Error getting system scaling:", str(e))
+        #print("Error getting system scaling:", str(e))
         return None, None
