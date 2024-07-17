@@ -27,9 +27,6 @@ def load_and_scale(image_name, scale_factor=1.0):
     image = load(image_name)
     image_width = image.get_width()
     image_height = image.get_height()
-    
-    # Store the original scale factor for possible later use
-    additional_scale_factor = scale_factor 
 
     # Calculate scaling factors based on screen dimensions
     # This ensures the image fits the screen height or width
@@ -42,20 +39,20 @@ def load_and_scale(image_name, scale_factor=1.0):
     if image_width > image_height:
         # For landscape images, scale based on width
         scaled_image = pygame.transform.scale(image, (
-            int(image.get_width() * scale_factor_landsacpe * additional_scale_factor), 
-            int(image.get_height() * scale_factor_landsacpe * additional_scale_factor)
+            int(width * scale_factor_landsacpe * scale_factor), 
+            int(height * scale_factor_landsacpe * scale_factor)
         ))
     else:
         # For portrait images, scale based on height
         scaled_image = pygame.transform.scale(image, (
-            int(image.get_width() * scale_factor_portrait * additional_scale_factor), 
-            int(image.get_height() * scale_factor_portrait * additional_scale_factor)
+            int(width * scale_factor_portrait * scale_factor), 
+            int(height * scale_factor_portrait * scale_factor)
         ))
 
 
     # Get the dimensions of the scaled image for debugging
-    image_width2 = scaled_image.get_width()
-    image_height2 = scaled_image.get_height()
+    # image_width2 = scaled_image.get_width()
+    # image_height2 = scaled_image.get_height()
     
     # Print debugging information
     # print(f"{'W>H' if image_width > image_height else 'W<H'}, "

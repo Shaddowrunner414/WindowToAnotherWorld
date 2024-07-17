@@ -20,10 +20,10 @@ class FaceCenterDetector:
 
         # Initialize timing and state variables
         self.quadrant_start_time = None
-        self.quadrant_duration_threshold = 4  # seconds
+        self.quadrant_duration_threshold = 2  # seconds
         self.upper_right_triggered = False
         self.face_detected = False
-        self.count = 0
+        self.count = 0 # Strutz wozu?? #Jonas: ich glaube zum debugging. 
         self.last_face_detected_time = None
         self.last_face_lost_time = None
 
@@ -60,18 +60,21 @@ class FaceCenterDetector:
     """
     def check_upper_right_quadrant(self, center_x, center_y, frame_width, frame_height):
         
+        ballon_offset_flag = 0 # Strutz
         #Check if the face is in the upper right quadrant
-        if center_x > frame_width / 2 and center_y < frame_height / 2:
+        if 2 * center_x > frame_width and 2 * center_y > frame_height:
             if self.quadrant_start_time is None:
                 # Start timing when face enters the quadrant
                 self.quadrant_start_time = time.time()
             else:
                 # Check how long the face has been in the quadrant
                 elapsed_time = time.time() - self.quadrant_start_time
-                ballon_speed_up()
-                if elapsed_time >= self.quadrant_duration_threshold and not self.upper_right_triggered:
-                    # Trigger the action if the threshold is reached
-                    self.upper_right_triggered = True
+                # ballon_speed_up() Strutz
+                if elapsed_time >= self.quadrant_duration_threshold:
+                    ballon_offset_flag = 1 # Strutz
+                # if elapsed_time >= self.quadrant_duration_threshold and not self.upper_right_triggered:
+                #     # Trigger the action if the threshold is reached
+                #     self.upper_right_triggered = True
         else:
             # Reset timing if face leaves the quadrant, but keep triggered state
             if self.quadrant_start_time is not None and self.upper_right_triggered:
@@ -79,8 +82,8 @@ class FaceCenterDetector:
         
         # Increment count if action is triggered (used of debugging and testing)
         if self.upper_right_triggered:
-            self.count += 1
-
+            self.count += 1 # Strutz wozu?? #Jonas: genau wie oben: debug
+        return ballon_offset_flag
 
     """
     Process a frame to detect a face and control the curtains 
@@ -104,7 +107,7 @@ class FaceCenterDetector:
                     self.last_face_detected_time = current_time
                 elif current_time - self.last_face_detected_time >= 1:
                     # If a face as been consistently detected for 2 seonds open the curtains
-                    print("curtains open")
+                    #print("curtains open")
                     self.face_detected = True
                     self.last_face_detected_time = None
         else:
@@ -116,12 +119,12 @@ class FaceCenterDetector:
                 elif current_time - self.last_face_lost_time >= 1:
                     
                     # If no face has been detected for 2 seconds, close the curtains
-                    print("curtains closed")
+                    #print("curtains closed")
                     self.face_detected = False
                     self.last_face_lost_time = None
                     self.quadrant_start_time = None
                     self.upper_right_triggered = False
-                    self.count = 0
+                    self.count = 0 # Strutz wozu?? #Jonas: genau wie oben: debug
 
     # Release resources used by the FaceMesh object
     # Should be called when the FaceCenterDetector is no longer needed

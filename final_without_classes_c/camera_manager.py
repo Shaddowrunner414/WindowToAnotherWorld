@@ -3,60 +3,50 @@ import numpy as np
 import pyrealsense2 as rs
 from asset_manager import *
 
-
 class CameraManager:
-    
-    # Initialize the CameraManager
-    # Try to use a RealSense Camera. Use a normal webcam if that fails
     def __init__(self, device_id=0):
         self.device_id = device_id
         self.use_realsense = True
         self.pipeline = None
         self.cap = None
+        self.camera_detected = False
 
         try:
             # Attempt to initialize RealSense camera
             self.pipeline = rs.pipeline()
             config = rs.config()
 
-            # Create a context object. This object owns the handles to all connected RealSense devices
             context = rs.context()
-
-            # Get a list of all connected RealSense devices
             device_list = context.query_devices()
 
-            # Create a dictionary of available RealSense devices
-            # The keys are device names. the values are their serial numbers
             realsense_devices = {device.get_info(rs.camera_info.name): device.get_info(rs.camera_info.serial_number) for device in device_list}
 
             if realsense_devices:
-                # If RealSense devices are available, use the first one
                 device_serial = next(iter(realsense_devices.values()))
-
-                # Use the choosen device using its serial number
                 config.enable_device(device_serial)
-
-                # Enable the depth stream to capture depth information 
                 config.enable_stream(rs.stream.depth)
-
-                #Enable the color stream to capture RGB information
                 config.enable_stream(rs.stream.color)
-
-                # Start the RealSense pipeline with the configured settings
                 self.pipeline.start(config)
                 print("Using RealSense camera")
+                self.camera_detected = True
             else:
-                # If no RealSense devices are found, raise an exception
                 raise Exception("No RealSense devices found")
 
         except Exception as e:
-            # If RealSense initialisation fails, fall back to a normal webcam
             print(f"Failed to initialize RealSense camera: {e}")
             print("Falling back to normal webcam")
             self.use_realsense = False
 
-            # Initialize OpenCV's VideCapture for the specified device
-            self.cap = cv2.VideoCapture(self.device_id)
+            try:
+                self.cap = cv2.VideoCapture(self.device_id)
+                if not self.cap.isOpened():
+                    raise Exception("Failed to open webcam")
+                print("Successfully initialized webcam")
+                self.camera_detected = True
+            except Exception as e:
+                print(f"Failed to initialize webcam: {e}")
+                self.camera_detected = False
+
 
     def start(self):
         """
@@ -67,10 +57,12 @@ class CameraManager:
 
         This Method should be idempotent
         """
-
-        if not self.use_realsense and not self.cap.isOpened():
-            # If it's not already open, open the video capture for normal webcams
-            self.cap.open(self.device_id)
+        if not self.camera_detected:
+            return False
+        if not self.use_realsense:
+            if not self.cap.isOpened():
+                return self.cap.open(self.device_id)
+        return True
 
 
     # stop the camera stream and release the allocated resources for both camera-options
@@ -167,81 +159,3 @@ class CameraManager:
         foreground_image = color_image_rgb    
    
         return color_image_rgb, foreground_image
-
-
-"""
-ab hier nur noch alte überreste, die wahrscheinlich gelöscht werden können
-"""
-
-# class CameraManager:
-#     def __init__(self, device_id=0):
-#         self.device_id = device_id
-#         self.cap = cv2.VideoCapture(self.device_id)
-
-#     def start(self):
-#         if not self.cap.isOpened():
-#             self.cap.open(self.device_id)
-
-#     def stop(self):
-#         if self.cap.isOpened():
-#             self.cap.release()
-
-#     def get_frame(self):
-#         ret, frame = self.cap.read()
-#         if not ret:
-#             return None, None
-
-#         color_image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-#         foreground_mask = np.ones((frame.shape[0], frame.shape[1]), dtype=np.uint8) * 255
-#         foreground_image = cv2.bitwise_and(color_image_rgb, color_image_rgb, mask=foreground_mask)
-
-#         return color_image_rgb, foreground_image
-    
-
-# class CameraManager:
-#     def __init__(self, device_id):
-#         self.device_id = device_id
-#         self.pipeline = rs.pipeline()
-#         self.config = rs.config()
-
-#         # List all available RealSense devices
-#         context = rs.context()
-#         device_list = context.query_devices()
-#         realsense_devices = {device.get_info(rs.camera_info.name): device.get_info(rs.camera_info.serial_number) for device in device_list}
-
-#         # Configure and start the RealSense camera
-#         if device_id in realsense_devices.values():
-#             self.config.enable_device(device_id)  # Use the serial number directly
-#         self.config.enable_stream(rs.stream.depth)
-#         self.config.enable_stream(rs.stream.color)
-
-#     def start(self):
-#         self.pipeline.start(self.config)
-
-#     def stop(self):
-#         self.pipeline.stop()    
-
-#     def get_frame(self):
-#         # Wait for a coherent set of frames: a color frame and a depth frame
-#         frames = self.pipeline.wait_for_frames()
-#         aligned_frames = rs.align(rs.stream.color).process(frames)
-#         depth_frame = aligned_frames.get_depth_frame()
-#         color_frame = aligned_frames.get_color_frame()
-
-#         # Convert images to NumPy arrays
-#         depth_image = np.asanyarray(depth_frame.get_data())
-#         color_image = np.asanyarray(color_frame.get_data())
-
-#         # Convert the BGR image to an RGB image
-#         color_image_rgb = cv2.cvtColor(color_image, cv2.COLOR_BGR2RGB)
-
-#         # Generate a simple foreground mask by ignoring all depth values that are above a threshold
-#         depth_scale = self.pipeline.get_active_profile().get_device().first_depth_sensor().get_depth_scale()
-#         #threshold = AssetManager.background_removal_threshold / depth_scale
-#         threshold = background_removal_threshold / depth_scale
-#         foreground_mask = np.where((depth_image > 0) & (depth_image < threshold), 255, 0).astype(np.uint8)
-
-#         # Apply the mask to the color image to extract the foreground
-#         foreground_image = cv2.bitwise_and(color_image_rgb, color_image_rgb, mask=foreground_mask)
-
-#         return color_image_rgb, foreground_image

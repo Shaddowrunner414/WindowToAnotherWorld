@@ -1,3 +1,4 @@
+import random
 import pygame
 import sys
 import cv2
@@ -14,8 +15,22 @@ pygame.init()
 
 # Initialize CameraManager
 camera = CameraManager()
-camera.start()
+if not camera.camera_detected:
+    print("No camera detected. Enter q to close the app (or Strg+C), connect a camera and try again")
+    while True:
+        user_input = input().lower()
+        if user_input == 'q':
+            pygame.quit()
+            sys.exit()
 
+if not camera.start():
+    print("Failed to start camera. Enter q to close the app (or Strg+C), check your camera connection and try again")
+    while True:
+        user_input = input().lower()
+        if user_input == 'q':
+            pygame.quit()
+            sys.exit()
+    
 # Get system scaling factors
 horizontal_scale, vertical_scale = get_system_scaling()
 
@@ -32,9 +47,19 @@ window = pygame.display.set_mode((width, height), pygame.SCALED)
 x_center, y_center = width // 2, height // 2
 
 # Initialize scene variables
-LevelSelected = True
+seedVal = time.process_time()  # Strutz: use new seed for random generator
+random.seed(seedVal)  # Strutz: 
+if random.random() < 0.5:
+    LevelSelected = True
+else:
+    LevelSelected = False
 wait = 0
 current_time = 0
+
+ballon_offset = 0 # Strutz
+ballon_offset_x = 0
+ballon_offset_val = 0 # increment of horizontal position
+ballon_offset_flag = False # Strutz
 
 # Initialize layers
 layer1 = layer2 = layer3 = layer4 = layer5 = layer6 = layer7 = None
@@ -65,6 +90,14 @@ x_layer4, y_layer4 = x_center - layer4.get_width() // 2, y_center - layer4.get_h
 x_layer5, y_layer5 = x_center - layer5.get_width() // 2, y_center - layer5.get_height() // 2
 x_layer6, y_layer6 = x_center - layer6.get_width() // 2, y_center - layer6.get_height() // 2
 x_layer7, y_layer7 = x_center - layer7.get_width() // 2, y_center - layer7.get_height() // 2
+
+x_layer1_old, y_layer1_old = x_layer1, y_layer1
+x_layer2_old, y_layer2_old = x_layer2, y_layer2
+x_layer3_old, y_layer3_old = x_layer3, y_layer3
+x_layer4_old, y_layer4_old = x_layer4, y_layer4
+x_layer5_old, y_layer5_old = x_layer5, y_layer5
+x_layer6_old, y_layer6_old = x_layer6, y_layer6
+x_layer7_old, y_layer7_old = x_layer7, y_layer7
 
 # Last known position 
 lastknown_x, lastknown_y = x_center, y_center
@@ -109,18 +142,19 @@ def switch_scene():
             image_layer7 = "Bee.png"
 
             speed_layer1 = 800
-            speed_layer2 = 700
+            speed_layer2 = 750
             speed_layer3 = 560
             speed_layer4 = 480
             speed_layer5 = 380
             speed_layer6 = 300
+            speed_layer7 = 350
 
             scale_layer1 = 1.2
-            scale_layer2 = 1.25
-            scale_layer3 = 1.2
+            scale_layer2 = 1.3
+            scale_layer3 = 1.25
             scale_layer4 = 1.2
             scale_layer5 = 1.2
-            scale_layer6 = 1.2
+            scale_layer6 = 1.12
 
             LevelSelected = False
         else:
@@ -140,6 +174,7 @@ def switch_scene():
             speed_layer4 = 260
             speed_layer5 = 180
             speed_layer6 = 100
+            speed_layer7 = 150
 
             scale_layer1 = 1
             scale_layer2 = 1
@@ -194,11 +229,36 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
             lastknown_x, lastknown_y = x_face_now, y_face_now
 
             # Call check_upper_right_quadrant function
-            face_detector.check_upper_right_quadrant(x_face_now, y_face_now, width, height)
+            if ballon_offset_flag == False: # Strutz
+                ballon_offset_flag = face_detector.check_upper_right_quadrant(x_face_now, y_face_now, width, height)
         elif lastknown_x is not None and lastknown_y is not None:
             x_face_now, y_face_now = lastknown_x, lastknown_y
         else:
             x_face_now, y_face_now = x_center, y_center
+        
+        if ballon_offset_flag: #Strutz if ballon has been started
+            ballon_offset += 1  # move it upwards
+            randVal = random.random()
+            if LevelSelected:
+                # Garden, movement of bee
+                if randVal > 0.98:
+                    ballon_offset_val += 1 # increment horizontal speed
+                elif randVal < 0.01 and ballon_offset_val > 0:
+                    ballon_offset_val -= 1 # reduce horizontal speed by chance
+            else:
+                # City, movement of balloon
+                if randVal > 0.99:
+                    ballon_offset_val += 1 # increment horizontal speed
+                elif randVal < 0.01 and ballon_offset_val >= 0:
+                    ballon_offset_val -= 1 # reduce horizontal speed by chance
+            ballon_offset_x += ballon_offset_val # move it sidewards
+
+            # Call check_upper_right_quadrant function
+        #     face_detector.check_upper_right_quadrant(x_face_now, y_face_now, width, height)
+        # elif lastknown_x is not None and lastknown_y is not None:
+        #     x_face_now, y_face_now = lastknown_x, lastknown_y
+        # else:
+        #     x_face_now, y_face_now = x_center, y_center
         
         # Smooth the face movement
         y_face_neu = height - ((y_face_now*3 + lastknown_y * 9) / 12)
@@ -230,6 +290,10 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
                 if not CurtainsClosed:
                     #print("Attempting to switch scene")  # Debug print
                     CurtainsClosed = True
+                    ballon_offset = 0 # Strutz reset offset values for next round
+                    ballon_offset_x = 0
+                    ballon_offset_val = 0
+                    ballon_offset_flag = False  
                     switch_scene()
         else:
             target_left_curtain_x = -layer0_leftCurtain.get_width()
@@ -264,13 +328,41 @@ with mp.solutions.face_detection.FaceDetection(min_detection_confidence=0.5) as 
         #print("CurtainsClosed:", CurtainsClosed)
 
         # Adjust the layer positions based on the face position
-        x_layer1, y_layer1 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), speed_layer1, layer1.get_width(), layer1.get_height())
-        x_layer2, y_layer2 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2), speed_layer2, layer2.get_width(), layer2.get_height())
-        x_layer3, y_layer3 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2), speed_layer3, layer3.get_width(), layer3.get_height())
-        x_layer4, y_layer4 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2), speed_layer4, layer4.get_width(), layer4.get_height())
-        x_layer5, y_layer5 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer5.get_width() // 2, y_center - layer5.get_height() // 2), speed_layer5, layer5.get_width(), layer5.get_height())
-        x_layer6, y_layer6 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer6.get_width() // 2, y_center - layer6.get_height() // 2), speed_layer6, layer6.get_width(), layer6.get_height())
-        x_layer7, y_layer7 = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer7.get_width() // 2, y_center - layer7.get_height() // 2), speed_layer7, layer7.get_width(), layer7.get_height(), layer_name="hot-air-ballon.png")
+        x_layer1, y_layer1, ballon_offset_flag = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer1.get_width() // 2, y_center - layer1.get_height() // 2), speed_layer1, layer1.get_width(), layer1.get_height())
+        x_layer2, y_layer2, ballon_offset_flag = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer2.get_width() // 2, y_center - layer2.get_height() // 2), speed_layer2, layer2.get_width(), layer2.get_height())
+        x_layer3, y_layer3, ballon_offset_flag = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer3.get_width() // 2, y_center - layer3.get_height() // 2), speed_layer3, layer3.get_width(), layer3.get_height())
+        x_layer4, y_layer4, ballon_offset_flag = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer4.get_width() // 2, y_center - layer4.get_height() // 2), speed_layer4, layer4.get_width(), layer4.get_height())
+        x_layer5, y_layer5, ballon_offset_flag = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer5.get_width() // 2, y_center - layer5.get_height() // 2), speed_layer5, layer5.get_width(), layer5.get_height())
+        x_layer6, y_layer6, ballon_offset_flag = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer6.get_width() // 2, y_center - layer6.get_height() // 2), speed_layer6, layer6.get_width(), layer6.get_height())
+        x_layer7, y_layer7, ballon_offset_flag = anpassung_der_ebenen(x_face_neu, y_face_neu, (x_center - layer7.get_width() // 2, y_center - layer7.get_height() // 2), speed_layer7, layer7.get_width(), layer7.get_height(), 
+                                                                      ballon_offset, ballon_offset_x, layer_name="hot-air-ballon.png")
+
+
+        # smoothing of movements Strutz
+        if  curtains_visible == False: # no smoothing when curtain is opening
+            x_layer1 = (x_layer1 + x_layer1_old * 3) // 4
+            x_layer2 = (x_layer2 + x_layer2_old * 3) // 4
+            x_layer3 = (x_layer3 + x_layer3_old * 3) // 4
+            x_layer4 = (x_layer4 + x_layer4_old * 3) // 4
+            x_layer5 = (x_layer5 + x_layer5_old * 3) // 4
+            x_layer6 = (x_layer6 + x_layer6_old * 3) // 4
+            x_layer7 = (x_layer7 + x_layer7_old * 3) // 4
+
+            y_layer1 = (y_layer1 + y_layer1_old * 3) // 4
+            y_layer2 = (y_layer2 + y_layer2_old * 3) // 4
+            y_layer3 = (y_layer3 + y_layer3_old * 3) // 4
+            y_layer4 = (y_layer4 + y_layer4_old * 3) // 4
+            y_layer5 = (y_layer5 + y_layer5_old * 3) // 4
+            y_layer6 = (y_layer6 + y_layer6_old * 3) // 4
+            y_layer7 = (y_layer7 + y_layer7_old * 3) // 4
+
+            x_layer1_old, y_layer1_old = x_layer1, y_layer1
+            x_layer2_old, y_layer2_old = x_layer2, y_layer2
+            x_layer3_old, y_layer3_old = x_layer3, y_layer3
+            x_layer4_old, y_layer4_old = x_layer4, y_layer4
+            x_layer5_old, y_layer5_old = x_layer5, y_layer5
+            x_layer6_old, y_layer6_old = x_layer6, y_layer6
+            x_layer7_old, y_layer7_old = x_layer7, y_layer7
 
         # Create a black background
         window.fill(BLACK)
